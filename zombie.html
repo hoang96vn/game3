@@ -103,13 +103,15 @@
       aspect-ratio: 16/9;
     }
 
-    #gameCanvas {
-      width: 100%;
-      height: 100%;
-      border-radius: 12px;
-      background-color: transparent;
-      display: block;
-      /* Hiệu ứng mờ dần */
+   #gameCanvas {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background-color: transparent;
+  display: block;
+}
+
+/* Hiệu ứng mờ dần */
 .fade-in {
   animation: fadeIn 1s ease forwards;
 }
@@ -117,7 +119,8 @@
 .fade-out {
   animation: fadeOut 1s ease forwards;
 }
-      #screenContainer {
+
+#screenContainer {
   width: 80%;
   max-width: 800px;
   margin: 0 auto;
@@ -138,14 +141,12 @@
   color: white;
 }
 
-/* Khi ở trạng thái lobby */
 #screenContainer.lobby {
-  background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png'); /* nền lobby */
+  background-image: url('https://hoang96vn.github.io/game3/background.png');
 }
 
-/* Khi chuyển sang game */
 #screenContainer.game {
-  background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png'); /* nền game */
+  background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
 }
 
 @keyframes fadeIn {
@@ -157,7 +158,6 @@
   0% { opacity: 1; transform: scale(1); }
   100% { opacity: 0; transform: scale(1.05); }
 }
-    }
   </style>
 </head>
 <body>
