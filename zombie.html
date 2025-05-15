@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Plants vs Zombies - Web</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      background-color: #000;
+    }
+
+    #lobby, #gameScreen {
+      width: 100vw;
+      height: 100vh;
+      position: absolute;
+      top: 0; left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
+      background-position: center;
+    }
+
+    #lobby {
+      flex-direction: column;
+      background-image: url('https://your-github-folder/lobby-bg.jpg'); /* Update sau */
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+
+    p.description {
+      max-width: 600px;
+      font-size: 20px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .level-buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .level-button {
+      background: orange;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 15px 30px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .level-button:hover {
+      transform: scale(1.05);
+    }
+
+    #gameScreen {
+      display: none;
+      background-image: url('https://your-github-folder/game-bg.jpg'); /* Update sau */
+    }
+
+    #gameCanvas {
+      border: 4px solid #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔸 Sảnh chờ -->
+  <div id="lobby">
+    <h1>🌻 Plants vs Zombies</h1>
+    <p class="description">
+      Hãy bảo vệ khu vườn khỏi lũ zombie! Trồng cây chiến đấu, thu thập ánh sáng và vượt qua các màn chơi đầy thử thách.
+    </p>
+    <div class="level-buttons">
+      <button class="level-button" data-level="1">Màn 1</button>
+      <button class="level-button" data-level="2">Màn 2</button>
+      <!-- Thêm nhiều màn tùy thích -->
+    </div>
+  </div>
+
+  <!-- 🔹 Giao diện game -->
+  <div id="gameScreen">
+    <canvas id="gameCanvas" width="960" height="540"></canvas>
+  </div>
+
+  <script>
+    const lobby = document.getElementById('lobby');
+    const gameScreen = document.getElementById('gameScreen');
+    const levelButtons = document.querySelectorAll('.level-button');
+
+    levelButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const level = button.dataset.level;
+        startGame(level);
+      });
+    });
+
+    function startGame(level) {
+      lobby.style.display = 'none';
+      gameScreen.style.display = 'flex';
+      initGame(level);
+    }
+
+    function initGame(level) {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // Tạm thời vẽ các hàng ngang (4 - 8 rows)
+      const rows = 5; // có thể cho level khác nhau có số hàng khác
+      const cellHeight = canvas.height / rows;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < rows; i++) {
+        ctx.fillStyle = i % 2 === 0 ? '#9be27d' : '#7ac142';
+        ctx.fillRect(0, i * cellHeight, canvas.width, cellHeight);
+      }
+
+      // Vẽ lưới chia hàng/cột nếu cần
+      const cols = 9;
+      const cellWidth = canvas.width / cols;
+      ctx.strokeStyle = '#ffffff44';
+      for (let i = 1; i < cols; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * cellWidth, 0);
+        ctx.lineTo(i * cellWidth, canvas.height);
+        ctx.stroke();
+      }
+    }
+  </script>
+</body>
+</html>
