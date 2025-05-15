@@ -97,6 +97,24 @@
       border-radius: 12px;
       background-color: transparent;
       display: block;
+      /* Hiệu ứng mờ dần */
+.fade-in {
+  animation: fadeIn 1s ease forwards;
+}
+
+.fade-out {
+  animation: fadeOut 1s ease forwards;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.05); }
+}
     }
   </style>
 </head>
@@ -155,11 +173,21 @@
       });
     });
 
-    function startGame(level) {
-      lobby.style.display = 'none';
-      gameScreen.style.display = 'flex';
-      initGame(level);
-    }
+   function startGame(level) {
+  // Thêm lớp mờ dần cho lobby
+  lobby.classList.add('fade-out');
+
+  // Sau khi mờ dần xong (1s), ẩn lobby và hiện game
+  setTimeout(() => {
+    lobby.style.display = 'none';
+    lobby.classList.remove('fade-out');
+
+    gameScreen.style.display = 'flex';
+    gameScreen.classList.add('fade-in');
+
+    initGame(level);
+  }, 1000); // 1 giây trùng với animation
+}
 
     function initGame(level) {
       const canvas = document.getElementById('gameCanvas');
@@ -190,6 +218,11 @@
     window.onload = () => {
       lobby.style.display = 'flex';
     };
+    window.onload = () => {
+  lobby.style.display = 'flex';
+  lobby.classList.remove('fade-out');
+  gameScreen.classList.remove('fade-in');
+};
   </script>
 </body>
 </html>
