@@ -256,6 +256,20 @@ function initGame(level) {
     ctx.stroke();
   }
 }
+  function startGame(level) {
+  screenContainer.classList.add('fade-out');
+  setTimeout(() => {
+    screenContainer.classList.remove('fade-out');
+    screenContainer.classList.remove('lobby');
+    screenContainer.classList.add('game');
+    screenContainer.classList.add('fade-in');
+
+    screenContent.innerHTML = `
+      <canvas id="gameCanvas" width="900" height="500"></canvas>
+    `;
+    initGame(level);
+  }, 600); // khớp thời gian với animation
+}
 </script>
 </body>
 </html>
