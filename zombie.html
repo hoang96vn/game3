@@ -51,7 +51,7 @@
 
     /* Nền lobby */
     #screenContainer.lobby {
-      background-image: url('https://hoang96vn.github.io/game3/background.png');
+      background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
     }
 
     /* Nền game */
@@ -107,6 +107,7 @@
       border-radius: 12px;
       display: block;
       background-color: transparent;
+}
     }
   </style>
 </head>
@@ -181,19 +182,38 @@
       }, 600);
     }
 
-    function initGame(level) {
-      const canvas = document.getElementById('gameCanvas');
-      const ctx = canvas.getContext('2d');
-      const rows = 5;
-      const cols = 9;
-      const cellHeight = canvas.height / rows;
-      const cellWidth = canvas.width / cols;
+   function initGame(level) {
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const rows = 5;
+  const cols = 9;
+  const cellHeight = canvas.height / rows;
+  const cellWidth = canvas.width / cols;
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < rows; i++) {
-        ctx.fillStyle = i % 2 === 0 ? '#9be27d' : '#7ac142';
-        ctx.fillRect(0, i * cellHeight, canvas.width, cellHeight);
-      }
+  // Xóa hết nội dung
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // KHÔNG tô màu nền nữa (vì đã có backgroundgame.png)
+  // -> Chỉ kẻ ô trong suốt
+
+  // Vẽ đường kẻ ngang
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; // trắng nhạt
+  for (let i = 0; i <= rows; i++) {
+    ctx.beginPath();
+    ctx.moveTo(0, i * cellHeight);
+    ctx.lineTo(canvas.width, i * cellHeight);
+    ctx.stroke();
+  }
+
+  // Vẽ đường kẻ dọc
+  for (let i = 0; i <= cols; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * cellWidth, 0);
+    ctx.lineTo(i * cellWidth, canvas.height);
+    ctx.stroke();
+  }
+}
+
 
       ctx.strokeStyle = '#ffffff44';
       for (let i = 1; i < cols; i++) {
