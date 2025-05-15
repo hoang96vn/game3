@@ -117,6 +117,36 @@
 .fade-out {
   animation: fadeOut 1s ease forwards;
 }
+      #screenContainer {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  transition: background 0.5s ease;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+#screenContent {
+  text-align: center;
+  color: white;
+}
+
+/* Khi ở trạng thái lobby */
+#screenContainer.lobby {
+  background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png'); /* nền lobby */
+}
+
+/* Khi chuyển sang game */
+#screenContainer.game {
+  background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png'); /* nền game */
+}
 
 @keyframes fadeIn {
   0% { opacity: 0; transform: scale(0.95); }
@@ -157,19 +187,19 @@
     </div>
 
     <!-- Nội dung chính -->
-    <div class="main-content">
-      <!-- Lobby chọn màn -->
-      <div id="lobby">
-  <div class="lobby-box">
-    <h1>🌻 Plants vs Zombies</h1>
-    <p>Hãy bảo vệ khu vườn khỏi lũ zombie!</p>
-    <div class="level-buttons">
-      <button class="level-button" data-level="1">Màn 1</button>
-      <button class="level-button" data-level="2">Màn 2</button>
+   <div class="main-content">
+  <div id="screenContainer" class="lobby">
+    <div id="screenContent">
+      <!-- Nội dung lobby sẽ hiển thị ở đây -->
+      <h1>🌻 Plants vs Zombies</h1>
+      <p>Hãy bảo vệ khu vườn khỏi lũ zombie!</p>
+      <div class="level-buttons">
+        <button class="level-button" data-level="1">Màn 1</button>
+        <button class="level-button" data-level="2">Màn 2</button>
+      </div>
     </div>
   </div>
 </div>
-
       <!-- Giao diện game -->
       <div id="gameScreen">
         <canvas id="gameCanvas" width="960" height="540"></canvas>
@@ -177,69 +207,55 @@
     </div>
   </div>
 
-  <script>
-    const lobby = document.getElementById('lobby');
-    const gameScreen = document.getElementById('gameScreen');
-    const levelButtons = document.querySelectorAll('.level-button');
+<script>
+const screenContainer = document.getElementById('screenContainer');
+const screenContent = document.getElementById('screenContent');
 
-    // Bắt đầu game khi chọn level
-    levelButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const level = button.dataset.level;
-        startGame(level);
-      });
-    });
+document.querySelectorAll('.level-button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const level = btn.dataset.level;
+    startGame(level);
+  });
+});
 
-   function startGame(level) {
-  // Thêm lớp mờ dần cho lobby
-  lobby.classList.add('fade-out');
+function startGame(level) {
+  // Thay class để đổi nền
+  screenContainer.classList.remove('lobby');
+  screenContainer.classList.add('game');
 
-  // Sau khi mờ dần xong (1s), ẩn lobby và hiện game
-  setTimeout(() => {
-    lobby.style.display = 'none';
-    lobby.classList.remove('fade-out');
+  // Thay nội dung trong #screenContent
+  screenContent.innerHTML = `
+    <canvas id="gameCanvas" width="900" height="500"></canvas>
+  `;
 
-    gameScreen.style.display = 'flex';
-    gameScreen.classList.add('fade-in');
-
-    initGame(level);
-  }, 1000); // 1 giây trùng với animation
+  // Khởi động canvas game
+  initGame(level);
 }
 
-    function initGame(level) {
-      const canvas = document.getElementById('gameCanvas');
-      const ctx = canvas.getContext('2d');
+function initGame(level) {
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const rows = 5;
+  const cols = 9;
+  const cellHeight = canvas.height / rows;
+  const cellWidth = canvas.width / cols;
 
-      // Vẽ nền tạm thời theo level
-      const rows = 5;
-      const cols = 9;
-      const cellHeight = canvas.height / rows;
-      const cellWidth = canvas.width / cols;
+  // Vẽ nền game đơn giản
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < rows; i++) {
+    ctx.fillStyle = i % 2 === 0 ? '#9be27d' : '#7ac142';
+    ctx.fillRect(0, i * cellHeight, canvas.width, cellHeight);
+  }
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < rows; i++) {
-        ctx.fillStyle = i % 2 === 0 ? '#9be27d' : '#7ac142';
-        ctx.fillRect(0, i * cellHeight, canvas.width, cellHeight);
-      }
-
-      ctx.strokeStyle = '#ffffff44';
-      for (let i = 1; i < cols; i++) {
-        ctx.beginPath();
-        ctx.moveTo(i * cellWidth, 0);
-        ctx.lineTo(i * cellWidth, canvas.height);
-        ctx.stroke();
-      }
-    }
-
-    // Hiển thị lobby ban đầu
-    window.onload = () => {
-      lobby.style.display = 'flex';
-    };
-    window.onload = () => {
-  lobby.style.display = 'flex';
-  lobby.classList.remove('fade-out');
-  gameScreen.classList.remove('fade-in');
-};
-  </script>
+  // Lưới
+  ctx.strokeStyle = '#ffffff44';
+  for (let i = 1; i < cols; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * cellWidth, 0);
+    ctx.lineTo(i * cellWidth, canvas.height);
+    ctx.stroke();
+  }
+}
+</script>
 </body>
 </html>
