@@ -26,138 +26,88 @@
       flex: 1;
     }
 
-    #lobby, #gameScreen {
-      width: 100%;
-      max-width: 1000px;
+   /* Dùng chung khung lobby + game */
+    #screenContainer {
+      width: 90%;
+      max-width: 960px;
       margin: 0 auto;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      aspect-ratio: 16 / 9;
+      border-radius: 20px;
       background-size: cover;
       background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      transition: background 0.5s ease;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
     }
 
-  #lobby {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
-  background-size: cover;
-  background-position: center;
-  border-radius: 20px;
-  box-sizing: border-box;
-}
+    #screenContent {
+      text-align: center;
+      color: white;
+      width: 100%;
+    }
 
-.lobby-box {
-  background: linear-gradient(to bottom, #fbb040, #f7931e);
-  padding: 40px;
-  border-radius: 25px;
-  text-align: center;
-  color: white;
-  max-width: 600px;
-  width: 100%;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
+    /* Nền lobby */
+    #screenContainer.lobby {
+      background-image: url('https://hoang96vn.github.io/game3/background.png');
+    }
 
-.lobby-box h1 {
-  font-size: 36px;
-  margin-bottom: 10px;
-}
-
-.lobby-box p {
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-.level-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.level-button {
-  background: orange;
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  font-size: 18px;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.level-button:hover {
-  transform: scale(1.05);
-  background: #ffaa00;
-}
-
-    #gameScreen {
+    /* Nền game */
+    #screenContainer.game {
       background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
-      border: 4px solid #fff;
-      border-radius: 20px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.5);
-      aspect-ratio: 16/9;
     }
 
-   #gameCanvas {
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  background-color: transparent;
-  display: block;
-}
+    .level-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
 
-/* Hiệu ứng mờ dần */
-.fade-in {
-  animation: fadeIn 1s ease forwards;
-}
+    .level-button {
+      background: orange;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-.fade-out {
-  animation: fadeOut 1s ease forwards;
-}
+    .level-button:hover {
+      transform: scale(1.05);
+      background: #ffaa00;
+    }
 
-#screenContainer {
-  width: 80%;
-  max-width: 800px;
-  margin: 0 auto;
-  aspect-ratio: 16 / 9;
-  border-radius: 15px;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 30px;
-  transition: background 0.5s ease;
-  box-shadow: 0 0 20px rgba(0,0,0,0.3);
-}
+    /* Hiệu ứng chuyển cảnh */
+    .fade-in {
+      animation: fadeIn 0.6s ease forwards;
+    }
 
-#screenContent {
-  text-align: center;
-  color: white;
-}
+    .fade-out {
+      animation: fadeOut 0.6s ease forwards;
+    }
 
-#screenContainer.lobby {
-  background-image: url('https://hoang96vn.github.io/game3/background.png');
-}
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1); }
+    }
 
-#screenContainer.game {
-  background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
-}
+    @keyframes fadeOut {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.05); }
+    }
 
-@keyframes fadeIn {
-  0% { opacity: 0; transform: scale(0.95); }
-  100% { opacity: 1; transform: scale(1); }
-}
-
-@keyframes fadeOut {
-  0% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(1.05); }
-}
+    canvas {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      display: block;
+      background-color: transparent;
+    }
   </style>
 </head>
 <body>
@@ -206,70 +156,53 @@
       </div>
     </div>
   </div>
+  <script>
+    const screenContainer = document.getElementById('screenContainer');
+    const screenContent = document.getElementById('screenContent');
 
-<script>
-const screenContainer = document.getElementById('screenContainer');
-const screenContent = document.getElementById('screenContent');
+    document.querySelectorAll('.level-button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const level = btn.dataset.level;
+        startGame(level);
+      });
+    });
 
-document.querySelectorAll('.level-button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const level = btn.dataset.level;
-    startGame(level);
-  });
-});
+    function startGame(level) {
+      screenContainer.classList.add('fade-out');
 
-function startGame(level) {
-  // Thay class để đổi nền
-  screenContainer.classList.remove('lobby');
-  screenContainer.classList.add('game');
+      setTimeout(() => {
+        screenContainer.classList.remove('fade-out');
+        screenContainer.classList.remove('lobby');
+        screenContainer.classList.add('game');
+        screenContainer.classList.add('fade-in');
 
-  // Thay nội dung trong #screenContent
-  screenContent.innerHTML = `
-    <canvas id="gameCanvas" width="900" height="500"></canvas>
-  `;
+        screenContent.innerHTML = `<canvas id="gameCanvas" width="900" height="500"></canvas>`;
+        initGame(level);
+      }, 600);
+    }
 
-  // Khởi động canvas game
-  initGame(level);
-}
+    function initGame(level) {
+      const canvas = document.getElementById('gameCanvas');
+      const ctx = canvas.getContext('2d');
+      const rows = 5;
+      const cols = 9;
+      const cellHeight = canvas.height / rows;
+      const cellWidth = canvas.width / cols;
 
-function initGame(level) {
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-  const rows = 5;
-  const cols = 9;
-  const cellHeight = canvas.height / rows;
-  const cellWidth = canvas.width / cols;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < rows; i++) {
+        ctx.fillStyle = i % 2 === 0 ? '#9be27d' : '#7ac142';
+        ctx.fillRect(0, i * cellHeight, canvas.width, cellHeight);
+      }
 
-  // Vẽ nền game đơn giản
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  for (let i = 0; i < rows; i++) {
-    ctx.fillStyle = i % 2 === 0 ? '#9be27d' : '#7ac142';
-    ctx.fillRect(0, i * cellHeight, canvas.width, cellHeight);
-  }
-
-  // Lưới
-  ctx.strokeStyle = '#ffffff44';
-  for (let i = 1; i < cols; i++) {
-    ctx.beginPath();
-    ctx.moveTo(i * cellWidth, 0);
-    ctx.lineTo(i * cellWidth, canvas.height);
-    ctx.stroke();
-  }
-}
-  function startGame(level) {
-  screenContainer.classList.add('fade-out');
-  setTimeout(() => {
-    screenContainer.classList.remove('fade-out');
-    screenContainer.classList.remove('lobby');
-    screenContainer.classList.add('game');
-    screenContainer.classList.add('fade-in');
-
-    screenContent.innerHTML = `
-      <canvas id="gameCanvas" width="900" height="500"></canvas>
-    `;
-    initGame(level);
-  }, 600); // khớp thời gian với animation
-}
-</script>
+      ctx.strokeStyle = '#ffffff44';
+      for (let i = 1; i < cols; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * cellWidth, 0);
+        ctx.lineTo(i * cellWidth, canvas.height);
+        ctx.stroke();
+      }
+    }
+  </script>
 </body>
 </html>
