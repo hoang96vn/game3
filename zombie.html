@@ -158,31 +158,31 @@
     </div>
   </div>
   <script>
-    const screenContainer = document.getElementById('screenContainer');
-    const screenContent = document.getElementById('screenContent');
+   const screenContainer = document.getElementById('screenContainer');
+const screenContent = document.getElementById('screenContent');
 
-    document.querySelectorAll('.level-button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const level = btn.dataset.level;
-        startGame(level);
-      });
-    });
+document.querySelectorAll('.level-button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const level = btn.dataset.level;
+    startGame(level);
+  });
+});
 
-    function startGame(level) {
-      screenContainer.classList.add('fade-out');
+function startGame(level) {
+  screenContainer.classList.add('fade-out');
 
-      setTimeout(() => {
-        screenContainer.classList.remove('fade-out');
-        screenContainer.classList.remove('lobby');
-        screenContainer.classList.add('game');
-        screenContainer.classList.add('fade-in');
+  setTimeout(() => {
+    screenContainer.classList.remove('fade-out');
+    screenContainer.classList.remove('lobby');
+    screenContainer.classList.add('game');
+    screenContainer.classList.add('fade-in');
 
-        screenContent.innerHTML = `<canvas id="gameCanvas" width="900" height="500"></canvas>`;
-        initGame(level);
-      }, 600);
-    }
+    screenContent.innerHTML = `<canvas id="gameCanvas" width="900" height="500"></canvas>`;
+    initGame(level);
+  }, 600);
+}
 
-   function initGame(level) {
+function initGame(level) {
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
   const rows = 5;
@@ -193,11 +193,10 @@
   // Xóa hết nội dung
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // KHÔNG tô màu nền nữa (vì đã có backgroundgame.png)
-  // -> Chỉ kẻ ô trong suốt
+  // Vẽ lưới trong suốt, không tô nền
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; // trắng nhạt
 
   // Vẽ đường kẻ ngang
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; // trắng nhạt
   for (let i = 0; i <= rows; i++) {
     ctx.beginPath();
     ctx.moveTo(0, i * cellHeight);
@@ -213,16 +212,6 @@
     ctx.stroke();
   }
 }
-
-
-      ctx.strokeStyle = '#ffffff44';
-      for (let i = 1; i < cols; i++) {
-        ctx.beginPath();
-        ctx.moveTo(i * cellWidth, 0);
-        ctx.lineTo(i * cellWidth, canvas.height);
-        ctx.stroke();
-      }
-    }
   </script>
 </body>
 </html>
