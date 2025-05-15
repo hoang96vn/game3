@@ -38,36 +38,62 @@
       background-position: center;
     }
 
-    #lobby {
-      height: 100%;
-      display: flex;
-      background-image: url('https://hoang96vn.github.io/game3/background.png');
-      text-align: center;
-      color: white;
-      padding: 30px;
-      border-radius: 15px;
-    }
+  #lobby {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-image: url('https://hoang96vn.github.io/game3/background.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
 
-    .level-buttons {
-      display: flex;
-      gap: 15px;
-      margin-top: 20px;
-    }
+.lobby-box {
+  background: linear-gradient(to bottom, #fbb040, #f7931e);
+  padding: 40px;
+  border-radius: 25px;
+  text-align: center;
+  color: white;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
 
-    .level-button {
-      background: orange;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 15px 30px;
-      font-size: 18px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+.lobby-box h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
 
-    .level-button:hover {
-      transform: scale(1.05);
-    }
+.lobby-box p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.level-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.level-button {
+  background: orange;
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 18px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.level-button:hover {
+  transform: scale(1.05);
+  background: #ffaa00;
+}
 
     #gameScreen {
       background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
@@ -131,13 +157,15 @@
     <div class="main-content">
       <!-- Lobby chọn màn -->
       <div id="lobby">
-        <h1>🌻 Plants vs Zombies</h1>
-        <p>Hãy bảo vệ khu vườn khỏi lũ zombie!</p>
-        <div class="level-buttons">
-          <button class="level-button" data-level="1">Màn 1</button>
-          <button class="level-button" data-level="2">Màn 2</button>
-        </div>
-      </div>
+  <div class="lobby-box">
+    <h1>🌻 Plants vs Zombies</h1>
+    <p>Hãy bảo vệ khu vườn khỏi lũ zombie!</p>
+    <div class="level-buttons">
+      <button class="level-button" data-level="1">Màn 1</button>
+      <button class="level-button" data-level="2">Màn 2</button>
+    </div>
+  </div>
+</div>
 
       <!-- Giao diện game -->
       <div id="gameScreen">
