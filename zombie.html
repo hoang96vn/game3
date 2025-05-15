@@ -8,42 +8,75 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    body, html {
+      height: 100%;
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    .body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .header {
+      display: flex;
+      background: linear-gradient(to bottom, #87CEFA, #00BFFF);
+      padding: 10px;
+      align-items: center;
+    }
+
+    .banner {
+      flex: 1;
+      text-align: center;
+      font-size: 20px;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .sidebar {
+      width: 180px;
+      background: #87CEFA;
+      padding: 10px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    .main-content {
+      margin-left: 200px;
+      padding: 20px;
+      background: #c6f9d8;
+      flex: 1;
+    }
+
     #lobby, #gameScreen {
       width: 100%;
-      height:auto;
-      display: flex;
-      justify-content: center;
+      max-width: 1000px;
+      margin: 0 auto;
+      display: none;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
       background-size: cover;
       background-position: center;
     }
 
     #lobby {
-      flex-direction: column;
-      background-image: url('https://hoang96vn.github.io/game3/background.png'); /* Update sau */
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-      padding: 40px;
-    }
-.khung-dem {
-  border: 1px;
-  dorder-color: blue;
-background: none;
-  padding: 0px;
-}
-  
-    p.description {
-      max-width: 200px;
-      font-size: 20px;
-      margin-bottom: 30px;
+      display: flex;
+      background-image: url('https://hoang96vn.github.io/game3/background.png');
       text-align: center;
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
     }
 
     .level-buttons {
       display: flex;
       gap: 15px;
-      flex-wrap: wrap;
-      justify-content: center;
+      margin-top: 20px;
     }
 
     .level-button {
@@ -52,87 +85,80 @@ background: none;
       border: none;
       border-radius: 12px;
       padding: 15px 30px;
-      font-size: 20px;
+      font-size: 18px;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: 0.2s;
     }
 
     .level-button:hover {
       transform: scale(1.05);
     }
-#gameScreen {
-  width: 100%;
-  max-width: 1000px;
-  aspect-ratio: 16 / 9;
-  position: relative;
-  background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
-  background-size: cover;
-  background-position: center;
-  border: 4px solid #fff;
-  border-radius: 20px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.5);
-  display: none; /* ẩn ban đầu */
-}
-    #gameField {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0; left: 0;
-}
+
+    #gameScreen {
+      background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
+      border: 4px solid #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      aspect-ratio: 16/9;
+    }
+
     #gameCanvas {
-  border-radius: 12px;
-  background-color: transparent;
-  display: block;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
-}
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      background-color: transparent;
+      display: block;
+    }
   </style>
 </head>
 <body>
-<div> <class="body">
+  <div class="body">
+
+    <!-- Header -->
     <div class="header">
-  <div class="logo">
-    <img src="https://hoang96vn.github.io/hoang/Logo.jpg" alt="Logo"> </div>
-  <div class="banner">
-    Trang web riêng tư của Quốc Hoàng & Xuân Thy
-  
- <h2>Xuân Thy, em có yêu anh Hoàng đẹp trai không?</h2>
-     </div></div>
+      <div class="logo">
+        <img src="https://hoang96vn.github.io/hoang/Logo.jpg" alt="Logo" height="100">
+      </div>
+      <div class="banner">
+        Trang web riêng tư của Quốc Hoàng & Xuân Thy<br>
+        <h2>Xuân Thy, em có yêu anh Hoàng đẹp trai không?</h2>
+      </div>
+    </div>
 
     <!-- Sidebar -->
     <div class="sidebar">
-      
-      <a href="https://hoang96vn.github.io/hoang">Trang chủ</a>        <!-- Liên kết tới trang chủ -->
-      <a href="https://hoang96vn.github.io/chat">Chat</a>            <!-- Liên kết tới trang chat -->
-      <a href="https://hoang96vn.github.io/hinhanh">Hình Ảnh</a>    <!-- Liên kết tới trang giới thiệu -->
-      <a href="https://hoang96vn.github.io/plan">Kế hoạch</a>    <!-- Liên kết tới trang giới thiệu -->
-      <a href="https://hoang96vn.github.io/lienhe">Liên hệ</a>     <!-- Liên kết tới trang liên hệ -->
+      <a href="https://hoang96vn.github.io/hoang">Trang chủ</a>
+      <a href="https://hoang96vn.github.io/chat">Chat</a>
+      <a href="https://hoang96vn.github.io/hinhanh">Hình Ảnh</a>
+      <a href="https://hoang96vn.github.io/plan">Kế hoạch</a>
+      <a href="https://hoang96vn.github.io/lienhe">Liên hệ</a>
     </div>
+
+    <!-- Nội dung chính -->
     <div class="main-content">
-  <!-- 🔸 Sảnh chờ -->
-  <div id="lobby">
-    <h1>🌻 Plants vs Zombies</h1>
-    <p class="description">
-      Hãy bảo vệ khu vườn khỏi lũ zombie! Trồng cây chiến đấu, thu thập ánh sáng và vượt qua các màn chơi đầy thử thách.
-    </p>
-    <div class="level-buttons">
-      <button class="level-button" data-level="1">Màn 1</button>
-      <button class="level-button" data-level="2">Màn 2</button>
-      <!-- Thêm nhiều màn tùy thích -->
-        <!-- 🔹 Giao diện game -->
-  <div id="gameScreen">
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
-  </div>
+      <!-- Lobby chọn màn -->
+      <div id="lobby">
+        <h1>🌻 Plants vs Zombies</h1>
+        <p>Hãy bảo vệ khu vườn khỏi lũ zombie!</p>
+        <div class="level-buttons">
+          <button class="level-button" data-level="1">Màn 1</button>
+          <button class="level-button" data-level="2">Màn 2</button>
+        </div>
+      </div>
+
+      <!-- Giao diện game -->
+      <div id="gameScreen">
+        <canvas id="gameCanvas" width="960" height="540"></canvas>
+      </div>
     </div>
   </div>
-    </div>
 
-
-</div>
   <script>
     const lobby = document.getElementById('lobby');
     const gameScreen = document.getElementById('gameScreen');
     const levelButtons = document.querySelectorAll('.level-button');
 
+    // Bắt đầu game khi chọn level
     levelButtons.forEach(button => {
       button.addEventListener('click', () => {
         const level = button.dataset.level;
@@ -150,9 +176,11 @@ background: none;
       const canvas = document.getElementById('gameCanvas');
       const ctx = canvas.getContext('2d');
 
-      // Tạm thời vẽ các hàng ngang (4 - 8 rows)
-      const rows = 5; // có thể cho level khác nhau có số hàng khác
+      // Vẽ nền tạm thời theo level
+      const rows = 5;
+      const cols = 9;
       const cellHeight = canvas.height / rows;
+      const cellWidth = canvas.width / cols;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let i = 0; i < rows; i++) {
@@ -160,9 +188,6 @@ background: none;
         ctx.fillRect(0, i * cellHeight, canvas.width, cellHeight);
       }
 
-      // Vẽ lưới chia hàng/cột nếu cần
-      const cols = 9;
-      const cellWidth = canvas.width / cols;
       ctx.strokeStyle = '#ffffff44';
       for (let i = 1; i < cols; i++) {
         ctx.beginPath();
@@ -171,6 +196,11 @@ background: none;
         ctx.stroke();
       }
     }
+
+    // Hiển thị lobby ban đầu
+    window.onload = () => {
+      lobby.style.display = 'flex';
+    };
   </script>
 </body>
 </html>
