@@ -109,12 +109,15 @@
       background-color: transparent;
 }
     }
-    #gameCanvas {
-  display: block;
-  margin: 0 auto;
-  border-radius: 12px;
-  background-color: transparent;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  #gameCanvas {
+  position: absolute;
+  top: 88px;
+  left: 444px;
+  width: 512px;
+  height: 424px;
+}
+    #screenContainer.game {
+  position: relative;
 }
   </style>
 </head>
@@ -160,7 +163,7 @@
 </div>
       <!-- Giao diện game -->
       <div id="gameScreen">
-        <canvas id="gameCanvas" width="800" height="300"></canvas>
+        <canvas id="gameCanvas" width="512" height="424"></canvas>
       </div>
     </div>
   </div>
