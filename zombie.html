@@ -467,6 +467,63 @@ document.querySelectorAll('.card').forEach(btn => {
 
   renderGame();
 });
+    let suns = [];
+let sunCount = 50;
+    function dropSunFromSky() {
+  const x = Math.random() * (canvas.width - 40);
+  const y = -40;
+  const sun = { x, y, from: "sky", collected: false };
+  suns.push(sun);
+}
+
+setInterval(dropSunFromSky, 5000);
+    function generateSunFromSunflowers() {
+  for (let plant of plants) {
+    if (plant.type === 'sunflower') {
+      const x = plant.col * cellWidth + 20;
+      const y = plant.row * cellHeight + 20;
+      suns.push({ x, y, from: "sunflower", collected: false });
+    }
+  }
+}
+
+setInterval(generateSunFromSunflowers, 6000);
+    // Vẽ sun
+for (let sun of suns) {
+  if (!sun.collected) {
+    ctx.drawImage(sunImg, sun.x, sun.y, 40, 40);
+  }
+}
+    for (let sun of suns) {
+  if (sun.from === "sky" && !sun.collected) {
+    sun.y += 1;
+    if (sun.y > canvas.height - 60) sun.y = canvas.height - 60;
+  }
+}
+    canvas.addEventListener('click', function (e) {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  // Kiểm tra click trúng sun
+  for (let sun of suns) {
+    if (!sun.collected &&
+        mouseX >= sun.x && mouseX <= sun.x + 40 &&
+        mouseY >= sun.y && mouseY <= sun.y + 40) {
+      sun.collected = true;
+      sunCount += 25;
+      document.getElementById('sunCount').textContent = sunCount;
+      return;
+    }
+  }
+
+  // Trồng cây (nếu bạn đã làm phần chọn cây)
+  const col = Math.floor(mouseX / cellWidth);
+  const row = Math.floor(mouseY / cellHeight);
+  plants.push({ type: "peashooter", row, col });
+});
+const sunImg = new Image();
+sunImg.src = 'https://hoang96vn.github.io/game3/sun.png'; // hoặc link sun bạn đã upload
   </script>
 </body>
   <footer>Copy right by Hoangdeptrai</footer>
