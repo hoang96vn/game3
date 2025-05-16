@@ -109,12 +109,12 @@
       background-color: transparent;
 }
     }
-  #gameCanvas {
+#gameCanvas {
   position: absolute;
-  top: 88px;
-  left: 444px;
-  width: 512px;
-  height: 424px;
+  top: 105px;
+  left: 250px;
+  width: 640px;
+  height: 360px;
 }
     #screenContainer.game {
   position: relative;
@@ -197,8 +197,8 @@ function initGame(level) {
   const ctx = canvas.getContext('2d');
   
   // 👉 Tăng số hàng và cột ở đây
-  const rows = 8;
-  const cols = 18;
+  const rows = 5;
+  const cols = 9;
 
   const cellHeight = canvas.height / rows;
   const cellWidth = canvas.width / cols;
