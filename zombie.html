@@ -119,6 +119,66 @@
     #screenContainer.game {
   position: relative;
 }
+    #gameUI {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#leftMenu {
+  width: 160px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#leftMenu .money {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.card {
+  background: orange;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+}
+
+.card:hover {
+  background: #ff9900;
+}
+
+#gameCanvas {
+  margin-left: 20px;
+  border-radius: 12px;
+}
+
+/* Text thông báo zombie sắp tới */
+#alertText {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  color: red;
+  font-weight: bold;
+  animation: warningMove 1s ease-in-out infinite alternate;
+  display: none;
+}
+
+@keyframes warningMove {
+  0% { transform: translateX(-50%) translateY(0); }
+  100% { transform: translateX(-50%) translateY(-10px); }
+}
   </style>
 </head>
 <body>
@@ -150,7 +210,19 @@
     <!-- Nội dung chính -->
    <div class="main-content">
   <div id="screenContainer" class="lobby">
-    <div id="screenContent">
+    screenContent.innerHTML = `
+  <div id="gameUI">
+    <div id="leftMenu">
+      <div class="money">☀️ <span id="sunCount">50</span></div>
+      <button class="card" data-type="peashooter">Peashooter</button>
+      <button class="card" data-type="sunflower">Sunflower</button>
+      <button class="card" data-type="bomb">Bom</button>
+      <button class="card" data-type="rock">Đá</button>
+    </div>
+    <canvas id="gameCanvas" width="640" height="360"></canvas>
+  </div>
+  <div id="alertText">⚠️ Quái vật chuẩn bị xuất hiện!</div>
+`;
       <!-- Nội dung lobby sẽ hiển thị ở đây -->
       <h1>🌻 Plants vs Zombies</h1>
       <p>Hãy bảo vệ khu vườn khỏi lũ zombie!</p>
@@ -277,6 +349,43 @@ zombies.push({ row: 2, x: 900 }); // zombie đi từ phải sang trái
 setInterval(gameLoop, 50);
     plants.push({ type: "peashooter", row: 2, col: 3 });
 zombies.push({ row: 2, x: canvas.width });
+    let sun = 50;
+document.getElementById("sunCount").innerText = sun;
+
+setTimeout(() => {
+  const alert = document.getElementById("alertText");
+  alert.style.display = 'block';
+
+  setTimeout(() => {
+    alert.style.display = 'none';
+    // Zombie bắt đầu xuất hiện
+    spawnZombies();
+  }, 3000);
+}, 1000);
+    function spawnZombies() {
+  const row = Math.floor(Math.random() * 5);
+  zombies.push({ row: row, x: canvas.width });
+}
+    setInterval(spawnZombies, 5000);
+    let selectedPlant = 'peashooter';
+
+document.querySelectorAll('.card').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedPlant = btn.dataset.type;
+  });
+});
+    canvas.addEventListener('click', function (e) {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+  
+  const col = Math.floor(mouseX / cellWidth);
+  const row = Math.floor(mouseY / cellHeight);
+
+  plants.push({ type: selectedPlant, row, col });
+  renderGame();
+});
+
   </script>
 </body>
   <footer>Copy right by Hoangdeptrai</footer>
