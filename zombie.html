@@ -208,21 +208,9 @@
     </div>
 
     <!-- Nội dung chính -->
-   <div class="main-content">
+  <div class="main-content">
   <div id="screenContainer" class="lobby">
-    screenContent.innerHTML = `
-  <div id="gameUI">
-    <div id="leftMenu">
-      <div class="money">☀️ <span id="sunCount">50</span></div>
-      <button class="card" data-type="peashooter">Peashooter</button>
-      <button class="card" data-type="sunflower">Sunflower</button>
-      <button class="card" data-type="bomb">Bom</button>
-      <button class="card" data-type="rock">Đá</button>
-    </div>
-    <canvas id="gameCanvas" width="640" height="360"></canvas>
-  </div>
-  <div id="alertText">⚠️ Quái vật chuẩn bị xuất hiện!</div>
-`;
+    <div id="screenContent">
       <!-- Nội dung lobby sẽ hiển thị ở đây -->
       <h1>🌻 Plants vs Zombies</h1>
       <p>Hãy bảo vệ khu vườn khỏi lũ zombie!</p>
@@ -267,7 +255,19 @@ function startGame(level) {
 function initGame(level) {
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
-  
+  screenContent.innerHTML = `
+  <div id="gameUI">
+    <div id="leftMenu">
+      <div class="money">☀️ <span id="sunCount">50</span></div>
+      <button class="card" data-type="peashooter">Peashooter</button>
+      <button class="card" data-type="sunflower">Sunflower</button>
+      <button class="card" data-type="bomb">Bom</button>
+      <button class="card" data-type="rock">Đá</button>
+    </div>
+    <canvas id="gameCanvas" width="640" height="360"></canvas>
+  </div>
+  <div id="alertText">⚠️ Quái vật chuẩn bị xuất hiện!</div>
+`;
   // 👉 Tăng số hàng và cột ở đây
   const rows = 5;
   const cols = 9;
