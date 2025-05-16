@@ -225,6 +225,22 @@
   0% { transform: translateX(-50%) translateY(0); }
   100% { transform: translateX(-50%) translateY(-10px); }
 }
+    .plant {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.plant.sunflower {
+  background-image: url('img/plants/sunflower.gif');
+}
+
+.plant.peashooter {
+  background-image: url('img/plants/peashooter.gif');
+}
+
   </style>
 </head>
 <body>
@@ -304,6 +320,8 @@ function initGame(level) {
     <div id="gameUI">
       <div id="leftMenu">
         <div class="money">☀️ <span id="sunCount">150</span></div>
+        <div class="plant-option" data-plant="sunflower">🌻</div>
+  <div class="plant-option" data-plant="peashooter">🌱</div>
         <button class="card" data-type="sunflower" data-cost="50"></button>
         <button class="card" data-type="peashooter" data-cost="150"></button>
         <button class="card" data-type="bomb" data-cost="150"></button>
@@ -472,6 +490,49 @@ function initGame(level) {
     }, 3000);
   }, 1000);
 }
+    document.addEventListener('click', function (e) {
+  if (e.target.classList.contains('sun')) {
+    // Tăng số sun hiện có
+    let sunCountElem = document.getElementById('sunCount');
+    let sunValue = parseInt(sunCountElem.innerText || '0', 10);
+    sunCountElem.innerText = sunValue + 25; // Mỗi sun = 25
+
+    // Xóa sun khỏi DOM
+    e.target.remove();
+  }
+});
+    let selectedPlant = null;
+
+document.querySelectorAll('.plant-option').forEach(option => {
+  option.addEventListener('click', () => {
+    selectedPlant = option.getAttribute('data-plant');
+  });
+});
+    const lawn = document.getElementById('gameCanvas'); // hoặc vùng div chứa lưới cỏ
+
+lawn.addEventListener('click', function(e) {
+  if (!selectedPlant) return;
+
+  // Kiểm tra đủ sun không
+  const sunCountElem = document.getElementById('sunCount');
+  let currentSun = parseInt(sunCountElem.innerText || '0', 10);
+  const cost = selectedPlant === 'sunflower' ? 50 : 100;
+
+  if (currentSun < cost) return;
+
+  // Trừ sun
+  sunCountElem.innerText = currentSun - cost;
+
+  // Thêm cây vào sân tại vị trí click
+  const plant = document.createElement('div');
+  plant.className = 'plant ' + selectedPlant;
+  plant.style.left = e.offsetX - 25 + 'px'; // chỉnh lại để căn giữa
+  plant.style.top = e.offsetY - 25 + 'px';
+  lawn.appendChild(plant);
+
+  // Reset chọn
+  selectedPlant = null;
+});
   </script>
 </body>
   <footer>Copy right by Hoangdeptrai</footer>
