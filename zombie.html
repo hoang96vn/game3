@@ -299,231 +299,179 @@ function startGame(level) {
 }
 
 function initGame(level) {
+  // Setup UI
+  screenContent.innerHTML = `
+    <div id="gameUI">
+      <div id="leftMenu">
+        <div class="money">☀️ <span id="sunCount">150</span></div>
+        <button class="card" data-type="sunflower" data-cost="50"></button>
+        <button class="card" data-type="peashooter" data-cost="150"></button>
+        <button class="card" data-type="bomb" data-cost="150"></button>
+        <button class="card" data-type="rock" data-cost="150"></button>
+      </div>
+      <canvas id="gameCanvas" width="640" height="360"></canvas>
+    </div>
+    <div id="alertText">⚠️ Quái vật chuẩn bị xuất hiện!</div>
+  `;
+
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
- screenContent.innerHTML = `
-  <div id="gameUI">
-    <div id="leftMenu">
-      <div class="money">☀️ <span id="sunCount">150</span></div>
-      <button class="card" data-type="sunflower" data-cost="50"></button>
-      <button class="card" data-type="peashooter" data-cost="150"></button>
-      <button class="card" data-type="bomb" data-cost="150"></button>
-      <button class="card" data-type="rock" data-cost="150"></button>
-    </div>
-    <canvas id="gameCanvas" width="640" height="360"></canvas>
-  </div>
-  <div id="alertText">⚠️ Quái vật chuẩn bị xuất hiện!</div>
-`;
-  // 👉 Tăng số hàng và cột ở đây
-  const rows = 5;
-  const cols = 9;
-
+  const rows = 5, cols = 9;
   const cellHeight = canvas.height / rows;
   const cellWidth = canvas.width / cols;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  let plants = [];
+  let zombies = [];
+  let suns = [];
+  let sunCount = 150;
+  let selectedPlant = null;
 
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+  const peashooterImg = new Image(); peashooterImg.src = 'https://hoang96vn.github.io/game3/peashooter.png';
+  const sunflowerImg = new Image();  sunflowerImg.src = 'https://hoang96vn.github.io/game3/sunflower.png';
+  const zombieImg = new Image();     zombieImg.src = 'https://hoang96vn.github.io/game3/zombie.gif';
+  const sunImg = new Image();        sunImg.src = 'https://hoang96vn.github.io/game3/sun.png';
 
-  // Vẽ đường kẻ ngang
-  for (let i = 0; i <= rows; i++) {
-    ctx.beginPath();
-    ctx.moveTo(0, i * cellHeight);
-    ctx.lineTo(canvas.width, i * cellHeight);
-    ctx.stroke();
+  document.querySelectorAll('.card').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cost = parseInt(btn.dataset.cost);
+      if (sunCount >= cost) {
+        selectedPlant = btn.dataset.type;
+      } else {
+        alert("Không đủ ☀️!");
+      }
+    });
+  });
+
+  canvas.addEventListener('click', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Thu thập mặt trời
+    for (let sun of suns) {
+      if (!sun.collected &&
+          mouseX >= sun.x && mouseX <= sun.x + 40 &&
+          mouseY >= sun.y && mouseY <= sun.y + 40) {
+        sun.collected = true;
+        sunCount += 25;
+        document.getElementById('sunCount').textContent = sunCount;
+        return;
+      }
+    }
+
+    // Trồng cây
+    if (!selectedPlant) return;
+
+    const col = Math.floor(mouseX / cellWidth);
+    const row = Math.floor(mouseY / cellHeight);
+
+    const cost = parseInt(document.querySelector(`.card[data-type="${selectedPlant}"]`).dataset.cost);
+    if (sunCount < cost) return;
+
+    plants.push({ type: selectedPlant, row, col });
+    sunCount -= cost;
+    document.getElementById('sunCount').textContent = sunCount;
+    selectedPlant = null;
+  });
+
+  function drawGrid() {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+    for (let i = 0; i <= rows; i++) {
+      ctx.beginPath();
+      ctx.moveTo(0, i * cellHeight);
+      ctx.lineTo(canvas.width, i * cellHeight);
+      ctx.stroke();
+    }
+    for (let i = 0; i <= cols; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * cellWidth, 0);
+      ctx.lineTo(i * cellWidth, canvas.height);
+      ctx.stroke();
+    }
   }
 
-  // Vẽ đường kẻ dọc
-  for (let i = 0; i <= cols; i++) {
-    ctx.beginPath();
-    ctx.moveTo(i * cellWidth, 0);
-    ctx.lineTo(i * cellWidth, canvas.height);
-    ctx.stroke();
-  }
-}
-    const peashooterImg = new Image();
-peashooterImg.src = 'https://hoang96vn.github.io/game3/peashooter.png';
+  function drawEntities() {
+    // Vẽ cây
+    for (let plant of plants) {
+      const x = plant.col * cellWidth;
+      const y = plant.row * cellHeight;
+      const img = (plant.type === 'sunflower') ? sunflowerImg : peashooterImg;
+      ctx.drawImage(img, x + 5, y + 5, cellWidth - 10, cellHeight - 10);
+    }
 
-const sunflowerImg = new Image();
-sunflowerImg.src = 'https://hoang96vn.github.io/game3/sunflower.png';
+    // Vẽ zombie
+    for (let zombie of zombies) {
+      ctx.drawImage(zombieImg, zombie.x, zombie.row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
+    }
 
-const zombieImg = new Image();
-zombieImg.src = 'https://hoang96vn.github.io/game3/zombie.gif';
-    let plants = [];   // mảng chứa cây
-let zombies = [];  // mảng chứa zombie
-    plants.push({ type: "peashooter", row: 2, col: 3 });
-zombies.push({ row: 2, x: 900 }); // zombie đi từ phải sang trái
-    function drawEntities(ctx, cellWidth, cellHeight) {
-  // Vẽ cây
-  for (let plant of plants) {
-    const x = plant.col * cellWidth;
-    const y = plant.row * cellHeight;
-    const img = (plant.type === 'peashooter') ? peashooterImg : sunflowerImg;
-    ctx.drawImage(img, x + 5, y + 5, cellWidth - 10, cellHeight - 10);
+    // Vẽ mặt trời
+    for (let sun of suns) {
+      if (!sun.collected) {
+        ctx.drawImage(sunImg, sun.x, sun.y, 40, 40);
+      }
+    }
   }
 
-  // Vẽ zombie
-  for (let zombie of zombies) {
-    const x = zombie.x;
-    const y = zombie.row * cellHeight;
-    ctx.drawImage(zombieImg, x, y + 5, cellWidth - 10, cellHeight - 10);
+  function updateZombies() {
+    for (let z of zombies) {
+      z.x -= 1;
+    }
   }
-}
-    canvas.addEventListener('click', function (e) {
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
-  
-  const col = Math.floor(mouseX / cellWidth);
-  const row = Math.floor(mouseY / cellHeight);
 
-  plants.push({ type: "peashooter", row, col });
-  renderGame(); // vẽ lại
-});
-    function updateZombies() {
-  for (let z of zombies) {
-    z.x -= 1; // zombie chạy sang trái
+  function updateSuns() {
+    for (let sun of suns) {
+      if (sun.from === "sky" && !sun.collected) {
+        sun.y += 1;
+        if (sun.y > canvas.height - 60) sun.y = canvas.height - 60;
+      }
+    }
   }
-}
-    function gameLoop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawGrid();
-  updateZombies();
-  drawEntities(ctx, cellWidth, cellHeight);
-}
 
-setInterval(gameLoop, 50);
-    plants.push({ type: "peashooter", row: 2, col: 3 });
-zombies.push({ row: 2, x: canvas.width });
-    let sun = 50;
-document.getElementById("sunCount").innerText = sun;
+  function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid();
+    updateZombies();
+    updateSuns();
+    drawEntities();
+  }
 
-setTimeout(() => {
-  const alert = document.getElementById("alertText");
-  alert.style.display = 'block';
+  setInterval(gameLoop, 50);
+
+  // Zombie và sun
+  function spawnZombies() {
+    const row = Math.floor(Math.random() * 5);
+    zombies.push({ row: row, x: canvas.width });
+  }
+
+  function dropSunFromSky() {
+    const x = Math.random() * (canvas.width - 40);
+    const y = -40;
+    suns.push({ x, y, from: "sky", collected: false });
+  }
+
+  function generateSunFromSunflowers() {
+    for (let plant of plants) {
+      if (plant.type === 'sunflower') {
+        const x = plant.col * cellWidth + 20;
+        const y = plant.row * cellHeight + 20;
+        suns.push({ x, y, from: "sunflower", collected: false });
+      }
+    }
+  }
+
+  setInterval(spawnZombies, 5000);
+  setInterval(dropSunFromSky, 5000);
+  setInterval(generateSunFromSunflowers, 6000);
 
   setTimeout(() => {
-    alert.style.display = 'none';
-    // Zombie bắt đầu xuất hiện
-    spawnZombies();
-  }, 3000);
-}, 1000);
-    function spawnZombies() {
-  const row = Math.floor(Math.random() * 5);
-  zombies.push({ row: row, x: canvas.width });
+    const alert = document.getElementById("alertText");
+    alert.style.display = 'block';
+    setTimeout(() => {
+      alert.style.display = 'none';
+      spawnZombies();
+    }, 3000);
+  }, 1000);
 }
-    setInterval(spawnZombies, 5000);
-    let selectedPlant = 'peashooter';
-
-document.querySelectorAll('.card').forEach(btn => {
-  btn.addEventListener('click', () => {
-    selectedPlant = btn.dataset.type;
-  });
-});
-    canvas.addEventListener('click', function (e) {
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
-  
-  const col = Math.floor(mouseX / cellWidth);
-  const row = Math.floor(mouseY / cellHeight);
-
-  plants.push({ type: selectedPlant, row, col });
-  renderGame();
-});
-let sunCount = 150;
-
-document.querySelectorAll('.card').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const type = btn.dataset.type;
-    const cost = parseInt(btn.dataset.cost);
-    if (sunCount >= cost) {
-      selectedPlant = type;
-      console.log(`Đã chọn ${type}`);
-    } else {
-      alert("Không đủ ☀️!");
-    }
-  });
-});
-    canvas.addEventListener('click', function (e) {
-  if (!selectedPlant) return;
-
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
-
-  const col = Math.floor(mouseX / cellWidth);
-  const row = Math.floor(mouseY / cellHeight);
-
-  // Trừ tiền
-  const cost = parseInt(document.querySelector(`.card[data-type="${selectedPlant}"]`).dataset.cost);
-  if (sunCount < cost) return;
-
-  sunCount -= cost;
-  document.getElementById('sunCount').innerText = sunCount;
-
-  plants.push({ type: selectedPlant, row, col });
-  selectedPlant = null;
-
-  renderGame();
-});
-    let suns = [];
-let sunCount = 50;
-    function dropSunFromSky() {
-  const x = Math.random() * (canvas.width - 40);
-  const y = -40;
-  const sun = { x, y, from: "sky", collected: false };
-  suns.push(sun);
-}
-
-setInterval(dropSunFromSky, 5000);
-    function generateSunFromSunflowers() {
-  for (let plant of plants) {
-    if (plant.type === 'sunflower') {
-      const x = plant.col * cellWidth + 20;
-      const y = plant.row * cellHeight + 20;
-      suns.push({ x, y, from: "sunflower", collected: false });
-    }
-  }
-}
-
-setInterval(generateSunFromSunflowers, 6000);
-    // Vẽ sun
-for (let sun of suns) {
-  if (!sun.collected) {
-    ctx.drawImage(sunImg, sun.x, sun.y, 40, 40);
-  }
-}
-    for (let sun of suns) {
-  if (sun.from === "sky" && !sun.collected) {
-    sun.y += 1;
-    if (sun.y > canvas.height - 60) sun.y = canvas.height - 60;
-  }
-}
-    canvas.addEventListener('click', function (e) {
-  const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
-
-  // Kiểm tra click trúng sun
-  for (let sun of suns) {
-    if (!sun.collected &&
-        mouseX >= sun.x && mouseX <= sun.x + 40 &&
-        mouseY >= sun.y && mouseY <= sun.y + 40) {
-      sun.collected = true;
-      sunCount += 25;
-      document.getElementById('sunCount').textContent = sunCount;
-      return;
-    }
-  }
-
-  // Trồng cây (nếu bạn đã làm phần chọn cây)
-  const col = Math.floor(mouseX / cellWidth);
-  const row = Math.floor(mouseY / cellHeight);
-  plants.push({ type: "peashooter", row, col });
-});
-const sunImg = new Image();
-sunImg.src = 'https://hoang96vn.github.io/game3/sun.png'; // hoặc link sun bạn đã upload
   </script>
 </body>
   <footer>Copy right by Hoangdeptrai</footer>
