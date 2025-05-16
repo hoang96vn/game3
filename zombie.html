@@ -213,6 +213,58 @@ function initGame(level) {
     ctx.stroke();
   }
 }
+    const peashooterImg = new Image();
+peashooterImg.src = 'https://hoang96vn.github.io/game3/peashooter.png';
+
+const sunflowerImg = new Image();
+sunflowerImg.src = 'https://hoang96vn.github.io/game3/sunflower.png';
+
+const zombieImg = new Image();
+zombieImg.src = 'https://hoang96vn.github.io/game3/zombie.png';
+    let plants = [];   // mảng chứa cây
+let zombies = [];  // mảng chứa zombie
+    plants.push({ type: "peashooter", row: 2, col: 3 });
+zombies.push({ row: 2, x: 900 }); // zombie đi từ phải sang trái
+    function drawEntities(ctx, cellWidth, cellHeight) {
+  // Vẽ cây
+  for (let plant of plants) {
+    const x = plant.col * cellWidth;
+    const y = plant.row * cellHeight;
+    const img = (plant.type === 'peashooter') ? peashooterImg : sunflowerImg;
+    ctx.drawImage(img, x + 5, y + 5, cellWidth - 10, cellHeight - 10);
+  }
+
+  // Vẽ zombie
+  for (let zombie of zombies) {
+    const x = zombie.x;
+    const y = zombie.row * cellHeight;
+    ctx.drawImage(zombieImg, x, y + 5, cellWidth - 10, cellHeight - 10);
+  }
+}
+    canvas.addEventListener('click', function (e) {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+  
+  const col = Math.floor(mouseX / cellWidth);
+  const row = Math.floor(mouseY / cellHeight);
+
+  plants.push({ type: "peashooter", row, col });
+  renderGame(); // vẽ lại
+});
+    function updateZombies() {
+  for (let z of zombies) {
+    z.x -= 1; // zombie chạy sang trái
+  }
+}
+    function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawGrid();
+  updateZombies();
+  drawEntities(ctx, cellWidth, cellHeight);
+}
+
+setInterval(gameLoop, 50);
   </script>
 </body>
   <footer>Copy right by Hoangdeptrai</footer>
