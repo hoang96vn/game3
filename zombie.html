@@ -185,16 +185,17 @@ function startGame(level) {
 function initGame(level) {
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
-  const rows = 5;
-  const cols = 9;
+  
+  // 👉 Tăng số hàng và cột ở đây
+  const rows = 8;
+  const cols = 18;
+
   const cellHeight = canvas.height / rows;
   const cellWidth = canvas.width / cols;
 
-  // Xóa hết nội dung
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // Vẽ lưới trong suốt, không tô nền
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)'; // trắng nhạt
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
 
   // Vẽ đường kẻ ngang
   for (let i = 0; i <= rows; i++) {
