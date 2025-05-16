@@ -119,28 +119,30 @@
     #screenContainer.game {
   position: relative;
 }
-    #gameUI {
+#gameUI {
   display: flex;
   position: relative;
-  width: 100%;
   height: 100%;
+  width: 100%;
 }
 
 #leftMenu {
-  width: 160px;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 10px;
-  padding: 15px;
+  width: 150px;
+  background-color: rgba(0, 0, 0, 0.3); /* nền trong suốt */
+  padding: 10px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-#leftMenu .money {
+.money {
+  color: #fff;
   font-size: 20px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
+  text-align: center;
+  padding: 5px;
+  background: rgba(255, 255, 0, 0.2);
+  border-radius: 8px;
 }
 
 .card {
@@ -173,6 +175,45 @@
   font-weight: bold;
   animation: warningMove 1s ease-in-out infinite alternate;
   display: none;
+}
+.card {
+  border: none;
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 60px;
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.card::after {
+  content: attr(data-cost) " ☀️";
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  font-size: 12px;
+  color: #fff;
+  background: rgba(0,0,0,0.5);
+  padding: 2px 4px;
+  border-radius: 5px;
+}
+
+/* Hình minh hoạ từng loại */
+.card[data-type="sunflower"] {
+  background-image: url('https://hoang96vn.github.io/game3/sunflower.png');
+}
+
+.card[data-type="peashooter"] {
+  background-image: url('https://hoang96vn.github.io/game3/peashooter.png');
+}
+
+.card[data-type="bomb"] {
+  background-image: url('https://hoang96vn.github.io/game3/bomb.png');
+}
+
+.card[data-type="rock"] {
+  background-image: url('https://hoang96vn.github.io/game3/rock.png');
 }
 
 @keyframes warningMove {
@@ -255,14 +296,14 @@ function startGame(level) {
 function initGame(level) {
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
-  screenContent.innerHTML = `
+ screenContent.innerHTML = `
   <div id="gameUI">
     <div id="leftMenu">
-      <div class="money">☀️ <span id="sunCount">50</span></div>
-      <button class="card" data-type="peashooter">Peashooter</button>
-      <button class="card" data-type="sunflower">Sunflower</button>
-      <button class="card" data-type="bomb">Bom</button>
-      <button class="card" data-type="rock">Đá</button>
+      <div class="money">☀️ <span id="sunCount">150</span></div>
+      <button class="card" data-type="sunflower" data-cost="50"></button>
+      <button class="card" data-type="peashooter" data-cost="150"></button>
+      <button class="card" data-type="bomb" data-cost="150"></button>
+      <button class="card" data-type="rock" data-cost="150"></button>
     </div>
     <canvas id="gameCanvas" width="640" height="360"></canvas>
   </div>
@@ -385,7 +426,42 @@ document.querySelectorAll('.card').forEach(btn => {
   plants.push({ type: selectedPlant, row, col });
   renderGame();
 });
+let sunCount = 150;
 
+document.querySelectorAll('.card').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const type = btn.dataset.type;
+    const cost = parseInt(btn.dataset.cost);
+    if (sunCount >= cost) {
+      selectedPlant = type;
+      console.log(`Đã chọn ${type}`);
+    } else {
+      alert("Không đủ ☀️!");
+    }
+  });
+});
+    canvas.addEventListener('click', function (e) {
+  if (!selectedPlant) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+
+  const col = Math.floor(mouseX / cellWidth);
+  const row = Math.floor(mouseY / cellHeight);
+
+  // Trừ tiền
+  const cost = parseInt(document.querySelector(`.card[data-type="${selectedPlant}"]`).dataset.cost);
+  if (sunCount < cost) return;
+
+  sunCount -= cost;
+  document.getElementById('sunCount').innerText = sunCount;
+
+  plants.push({ type: selectedPlant, row, col });
+  selectedPlant = null;
+
+  renderGame();
+});
   </script>
 </body>
   <footer>Copy right by Hoangdeptrai</footer>
