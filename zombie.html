@@ -272,7 +272,6 @@
   }
 
 function initGame(level) {
-  // Setup UI
   screenContent.innerHTML = `
     <div id="gameUI">
       <div id="leftMenu">
@@ -300,41 +299,35 @@ function initGame(level) {
   let selectedPlant = null;
 
   const images = {
-  sunflower: new Image(),
-  peashooter: new Image(),
-  zombie: new Image(),
-  sun: new Image()
-};
+    sunflower: new Image(),
+    peashooter: new Image(),
+    zombie: new Image(),
+    sun: new Image()
+  };
 
-images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
   images.sunflower.src = 'https://hoang96vn.github.io/game3/sunflower.png';
-images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.png';
-images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
-const cards = document.querySelectorAll('.card');
+  images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.png';
+  images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
+  images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
 
-  cards.forEach(card => {
+  // Chọn cây
+  document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('click', () => {
-      // Gán loại cây được chọn vào biến toàn cục
       selectedPlant = card.dataset.type;
-
-      // Highlight thẻ được chọn
-      cards.forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
       card.classList.add('selected');
-
-      console.log("Đã chọn:", selectedPlant);
     });
   });
 
+  // Trồng cây hoặc thu thập sun
   canvas.addEventListener('click', e => {
     const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
 
-    // Thu thập mặt trời
+    // Thu thập sun
     for (let sun of suns) {
-      if (!sun.collected &&
-          mouseX >= sun.x && mouseX <= sun.x + 40 &&
-          mouseY >= sun.y && mouseY <= sun.y + 40) {
+      if (!sun.collected && x >= sun.x && x <= sun.x + 40 && y >= sun.y && y <= sun.y + 40) {
         sun.collected = true;
         sunCount += 25;
         document.getElementById('sunCount').textContent = sunCount;
@@ -342,11 +335,10 @@ const cards = document.querySelectorAll('.card');
       }
     }
 
-    // Trồng cây
     if (!selectedPlant) return;
 
-    const col = Math.floor(mouseX / cellWidth);
-    const row = Math.floor(mouseY / cellHeight);
+    const col = Math.floor(x / cellWidth);
+    const row = Math.floor(y / cellHeight);
 
     const cost = parseInt(document.querySelector(`.card[data-type="${selectedPlant}"]`).dataset.cost);
     if (sunCount < cost) return;
@@ -356,6 +348,7 @@ const cards = document.querySelectorAll('.card');
     document.getElementById('sunCount').textContent = sunCount;
   });
 
+  // Vẽ lưới
   function drawGrid() {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     for (let i = 0; i <= rows; i++) {
@@ -372,32 +365,33 @@ const cards = document.querySelectorAll('.card');
     }
   }
 
+  // Vẽ mọi đối tượng
   function drawEntities() {
-    // Vẽ cây
     for (let plant of plants) {
-      const x = plant.col * cellWidth;
-      const y = plant.row * cellHeight;
-   const img = images[plant.type];
-ctx.drawImage(img, x + 10, y + 10, cellWidth - 20, cellHeight - 20);
-    // Vẽ zombie
-    for (let zombie of zombies) {
-     ctx.drawImage(images.zombie, zombie.x, zombie.row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
+      const x = plant.col * cellWidth + 10;
+      const y = plant.row * cellHeight + 10;
+      ctx.drawImage(images[plant.type], x, y, cellWidth - 20, cellHeight - 20);
     }
 
-    // Vẽ mặt trời
+    for (let zombie of zombies) {
+      ctx.drawImage(images.zombie, zombie.x, zombie.row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
+    }
+
     for (let sun of suns) {
       if (!sun.collected) {
-      ctx.drawImage(images.sun, sun.x, sun.y, 40, 40);
+        ctx.drawImage(images.sun, sun.x, sun.y, 40, 40);
       }
     }
   }
 
+  // Cập nhật zombie
   function updateZombies() {
     for (let z of zombies) {
       z.x -= 1;
     }
   }
 
+  // Cập nhật mặt trời
   function updateSuns() {
     for (let sun of suns) {
       if (sun.from === "sky" && !sun.collected) {
@@ -414,134 +408,45 @@ ctx.drawImage(img, x + 10, y + 10, cellWidth - 20, cellHeight - 20);
     updateSuns();
     drawEntities();
   }
-setInterval(gameLoop, 50);
-setInterval(spawnZombies, 5000);
-setInterval(dropSunFromSky, 5000);
-setInterval(generateSunFromSunflowers, 6000);
 
-  // Zombie và sun
+  setInterval(gameLoop, 50);
+
+  // Spawner
   function spawnZombies() {
-    const row = Math.floor(Math.random() * 5);
+    const row = Math.floor(Math.random() * rows);
     zombies.push({ row: row, x: canvas.width });
+    document.getElementById("alertText").style.display = "block";
+    setTimeout(() => {
+      document.getElementById("alertText").style.display = "none";
+    }, 1000);
   }
 
   function dropSunFromSky() {
-    const x = Math.random() * (canvas.width - 40);
-    const y = -40;
-    suns.push({ x, y, from: "sky", collected: false });
+    suns.push({
+      x: Math.random() * (canvas.width - 40),
+      y: -40,
+      from: "sky",
+      collected: false
+    });
   }
-function generateSunFromSunflowers() {
-  for (let plant of plants) {
-    if (plant.type === "sunflower") {
-      const x = plant.col * cellWidth + 10;
-      const y = plant.row * cellHeight + 10;
-      suns.push({ x, y, from: "plant", collected: false });
+
+  function generateSunFromSunflowers() {
+    for (let plant of plants) {
+      if (plant.type === "sunflower") {
+        suns.push({
+          x: plant.col * cellWidth + 30,
+          y: plant.row * cellHeight + 20,
+          from: "sunflower",
+          collected: false
+        });
+      }
     }
   }
-}
-
-// Vẽ zombie tách riêng
-for (let zombie of zombies) {
-  ctx.drawImage(images.zombie, zombie.x, zombie.row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
-}
 
   setInterval(spawnZombies, 5000);
   setInterval(dropSunFromSky, 5000);
   setInterval(generateSunFromSunflowers, 6000);
-
-  setTimeout(() => {
-    setTimeout(() => {
-sunElement.addEventListener("click", (e) => {
-  sunCount += 25;
-  document.getElementById("sunCount").textContent = sunCount;
-
-  const alert = document.getElementById("alertText");
-  alert.style.display = 'block';
-
-  setTimeout(() => {
-    alert.style.display = 'none';
-    // Xóa sun khỏi DOM sau khi ẩn cảnh báo
-    e.target.remove();
-  }, 1000);
-
-  // Nếu bạn muốn xóa sun NGAY khi click (không đợi 1s)
-  // e.target.remove(); // << Bỏ dòng này nếu dùng remove() trong setTimeout ở trên
-});
-
-    const lawn = document.getElementById('gameCanvas'); // hoặc vùng div chứa lưới cỏ
-
-
-  // Kiểm tra đủ sun không
-  const sunCountElem = document.getElementById('sunCount');
-  let currentSun = parseInt(sunCountElem.innerText || '0', 10);
-  const cost = selectedPlant === 'sunflower' ? 50 : 100;
-
-  if (currentSun < cost) return;
-
-  // Trừ sun
-  sunCountElem.innerText = currentSun - cost;
-
-  // Thêm cây vào sân tại vị trí click
-  const plant = document.createElement('div');
-  plant.className = 'plant ' + selectedPlant;
-  plant.style.left = e.offsetX - 25 + 'px'; // chỉnh lại để căn giữa
-  plant.style.top = e.offsetY - 25 + 'px';
-  lawn.appendChild(plant);
-
-  // Reset chọn
-});
-   function updateCardAvailability() {
-  document.querySelectorAll('.card').forEach(card => {
-    const cost = parseInt(card.dataset.cost);
-    if (sunCount < cost) {
-      card.classList.add('disabled');
-    } else {
-      card.classList.remove('disabled');
-    }
-  });
 }
-setInterval(updateCardAvailability, 500);
-  
-
-    // Lấy tọa độ click
-    const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    // Tính vị trí hàng/cột (nếu bạn chia canvas thành lưới)
-    const col = Math.floor(x / 80);
-    const row = Math.floor(y / 85);
-
-    console.log(`Trồng cây ${selectedPlant} tại hàng ${row}, cột ${col}`);
-
-    // Gọi hàm trồng cây
-    plantAt(row, col, selectedPlant);
-
-  function plantAt(row, col, type) {
-    // Tùy logic game, bạn có thể vẽ hình hoặc tạo object cây tại đây
-    console.log(`>> Đã trồng ${type} ở (${row}, ${col})`);
-    // TODO: Vẽ hình ảnh cây lên canvas hoặc thêm vào mảng cây
-  }
-  function updateZombies() {
-  for (let z of zombies) {
-    z.x -= 1;
-
-    for (let p of plants) {
-      if (z.row === p.row && z.x < p.col * cellWidth + cellWidth / 2) {
-        z.x += 1; // Zombie dừng lại khi gặp cây
-        break;
-      }
-    }
-  }
-}
-plants.push({ type: selectedPlant, row, col, lastSun: Date.now() });
-setTimeout(() => {
-  const alert = document.getElementById("alertText");
-  alert.style.display = "block";
-  setTimeout(() => {
-    alert.style.display = "none";
-  }, 2000);
-}, 3000); // ví dụ sau 3s thì cảnh báo
   </script>
    <footer>Copy right by Hoangdeptrai</footer>
 </body>
