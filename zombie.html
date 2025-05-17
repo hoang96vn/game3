@@ -306,14 +306,18 @@ images.zombie.src = 'https://hoang96vn.github.io/game3/zombie.gif';
   images.sunflower.src = 'https://hoang96vn.github.io/game3/sunflower.png';
 images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.png';
 
-  document.querySelectorAll('.card').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const cost = parseInt(btn.dataset.cost);
-      if (sunCount >= cost) {
-        selectedPlant = btn.dataset.type;
-      } else {
-        alert("Không đủ ☀️!");
-      }
+const cards = document.querySelectorAll('.card');
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      // Gán loại cây được chọn vào biến toàn cục
+      selectedPlant = card.dataset.type;
+
+      // Highlight thẻ được chọn
+      cards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+
+      console.log("Đã chọn:", selectedPlant);
     });
   });
 
@@ -346,7 +350,7 @@ images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.png';
     plants.push({ type: selectedPlant, row, col });
     sunCount -= cost;
     document.getElementById('sunCount').textContent = sunCount;
-    selectedPlant = null;
+ 
   });
 
   function drawGrid() {
@@ -458,7 +462,7 @@ images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.png';
     e.target.remove();
   }
 });
-    let selectedPlant = null;
+
 
 document.querySelectorAll('.plant-option').forEach(option => {
   option.addEventListener('click', () => {
@@ -488,7 +492,6 @@ lawn.addEventListener('click', function(e) {
   lawn.appendChild(plant);
 
   // Reset chọn
-  selectedPlant = null;
 });
     function updateCardAvailability() {
  document.querySelectorAll('.card').forEach(btn => {
@@ -502,6 +505,33 @@ lawn.addEventListener('click', function(e) {
   });
 });
      setInterval(updateCardAvailability, 500); 
+       const canvas = document.getElementById("gameCanvas");
+  canvas.addEventListener('click', (event) => {
+    if (!selectedPlant) {
+      console.log("Bạn chưa chọn cây nào!");
+      return;
+    }
+
+    // Lấy tọa độ click
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    // Tính vị trí hàng/cột (nếu bạn chia canvas thành lưới)
+    const col = Math.floor(x / 80);
+    const row = Math.floor(y / 85);
+
+    console.log(`Trồng cây ${selectedPlant} tại hàng ${row}, cột ${col}`);
+
+    // Gọi hàm trồng cây
+    plantAt(row, col, selectedPlant);
+  });
+
+  function plantAt(row, col, type) {
+    // Tùy logic game, bạn có thể vẽ hình hoặc tạo object cây tại đây
+    console.log(`>> Đã trồng ${type} ở (${row}, ${col})`);
+    // TODO: Vẽ hình ảnh cây lên canvas hoặc thêm vào mảng cây
+  }
   </script>
    <footer>Copy right by Hoangdeptrai</footer>
 </body>
