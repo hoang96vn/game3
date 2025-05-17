@@ -6,7 +6,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://hoang96vn.github.io/css/style.css" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    /* Tối ưu hóa CSS: gom nhóm chung, loại bỏ trùng lặp */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body, html {
       height: 100%;
@@ -26,37 +31,27 @@
       flex: 1;
     }
 
-   /* Dùng chung khung lobby + game */
     #screenContainer {
       width: 90%;
       max-width: 960px;
       margin: 0 auto;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 16/9;
       border-radius: 20px;
+      background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
       background-size: cover;
       background-position: center;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 30px;
-      transition: background 0.5s ease;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      transition: background 0.5s ease;
     }
 
     #screenContent {
       text-align: center;
       color: white;
       width: 100%;
-    }
-
-    /* Nền lobby */
-    #screenContainer.lobby {
-      background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
-    }
-
-    /* Nền game */
-    #screenContainer.game {
-      background-image: url('https://hoang96vn.github.io/game3/backgroundgame.png');
     }
 
     .level-buttons {
@@ -82,24 +77,18 @@
       background: #ffaa00;
     }
 
-    /* Hiệu ứng chuyển cảnh */
-    .fade-in {
-      animation: fadeIn 0.6s ease forwards;
-    }
-
-    .fade-out {
-      animation: fadeOut 0.6s ease forwards;
-    }
-
     @keyframes fadeIn {
-      0% { opacity: 0; transform: scale(0.95); }
-      100% { opacity: 1; transform: scale(1); }
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
     }
 
     @keyframes fadeOut {
-      0% { opacity: 1; transform: scale(1); }
-      100% { opacity: 0; transform: scale(1.05); }
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0; transform: scale(1.05); }
     }
+
+    .fade-in  { animation: fadeIn 0.6s ease forwards; }
+    .fade-out { animation: fadeOut 0.6s ease forwards; }
 
     canvas {
       width: 100%;
@@ -107,143 +96,104 @@
       border-radius: 12px;
       display: block;
       background-color: transparent;
-}
     }
-#gameCanvas {
-  position: absolute;
-  top: 105px;
-  left: 250px;
-  width: 640px;
-  height: 360px;
-}
-    #screenContainer.game {
-  position: relative;
-}
-#gameUI {
-  display: flex;
-  position: relative;
-  height: 100%;
-  width: 100%;
-}
 
-#leftMenu {
-  width: 150px;
-  background-color: rgba(0, 0, 0, 0.3); /* nền trong suốt */
-  padding: 10px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  flex-shrink: 0; /* không co lại */
-  z-index: 2;
-}
+    #gameCanvas {
+      position: absolute;
+      top: 105px;
+      left: 250px;
+      width: 640px;
+      height: 360px;
+    }
 
-#gameCanvas {
-  flex-grow: 1;
-  display: block;
-  border-radius: 12px;
-  background-color: transparent;
-  margin-left: 10px; /* tạo khoảng cách với menu trái */
-}
+    #gameUI {
+      display: flex;
+      position: relative;
+      height: 100%;
+      width: 100%;
+    }
 
-.money {
-  color: #fff;
-  font-size: 20px;
-  text-align: center;
-  padding: 5px;
-  background: rgba(255, 255, 0, 0.2);
-  border-radius: 8px;
-}
+    #leftMenu {
+      width: 150px;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 10px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+      z-index: 2;
+    }
 
-.card {
-  background: orange;
-  border: none;
-  padding: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 14px;
-  color: white;
-}
-.card.disabled {
-  opacity: 0.5;
-  pointer-events: none;
-}
-.card:hover {
-  background: #ff9900;
-}
+    .money {
+      color: #fff;
+      font-size: 20px;
+      text-align: center;
+      padding: 5px;
+      background: rgba(255, 255, 0, 0.2);
+      border-radius: 8px;
+    }
 
-/* Text thông báo zombie sắp tới */
-#alertText {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 24px;
-  color: red;
-  font-weight: bold;
-  animation: warningMove 1s ease-in-out infinite alternate;
-  display: none;
-}
-.card {
-  border: none;
-  background-size: cover;
-  background-position: center;
-  width: 100%;
-  height: 60px;
-  border-radius: 10px;
-  cursor: pointer;
-  position: relative;
-}
+    .card {
+      background-size: cover;
+      background-position: center;
+      width: 100%;
+      height: 60px;
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+      border: none;
+    }
 
-.card::after {
-  content: attr(data-cost) " ☀️";
-  position: absolute;
-  bottom: 0;
-  right: 5px;
-  font-size: 12px;
-  color: #fff;
-  background: rgba(0,0,0,0.5);
-  padding: 2px 4px;
-  border-radius: 5px;
-}
+    .card.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
 
-/* Hình minh hoạ từng loại */
-.card[data-type="sunflower"] {
-  background-image: url('https://hoang96vn.github.io/game3/sunflower.png');
-}
+    .card::after {
+      content: attr(data-cost) " \2600";
+      position: absolute;
+      bottom: 0;
+      right: 5px;
+      font-size: 12px;
+      color: #fff;
+      background: rgba(0,0,0,0.5);
+      padding: 2px 4px;
+      border-radius: 5px;
+    }
 
-.card[data-type="peashooter"] {
-  background-image: url('https://hoang96vn.github.io/game3/peashooter.png');
-}
+    .card[data-type="sunflower"] { background-image: url('https://hoang96vn.github.io/game3/sunflower.png'); }
+    .card[data-type="peashooter"] { background-image: url('https://hoang96vn.github.io/game3/peashooter.png'); }
+    .card[data-type="bomb"]       { background-image: url('https://hoang96vn.github.io/game3/bomb.png'); }
+    .card[data-type="rock"]       { background-image: url('https://hoang96vn.github.io/game3/rock.png'); }
 
-.card[data-type="bomb"] {
-  background-image: url('https://hoang96vn.github.io/game3/bomb.png');
-}
+    #alertText {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      color: red;
+      font-weight: bold;
+      animation: warningMove 1s ease-in-out infinite alternate;
+      display: none;
+    }
 
-.card[data-type="rock"] {
-  background-image: url('https://hoang96vn.github.io/game3/rock.png');
-}
+    @keyframes warningMove {
+      0% { transform: translateX(-50%) translateY(0); }
+      100% { transform: translateX(-50%) translateY(-10px); }
+    }
 
-@keyframes warningMove {
-  0% { transform: translateX(-50%) translateY(0); }
-  100% { transform: translateX(-50%) translateY(-10px); }
-}
     .plant {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
 
-.plant.sunflower {
-  background-image: url('img/plants/sunflower.gif');
-}
-
-.plant.peashooter {
-  background-image: url('img/plants/peashooter.gif');
-}
-
+    .plant.sunflower  { background-image: url('img/plants/sunflower.gif'); }
+    .plant.peashooter { background-image: url('img/plants/peashooter.gif'); }
   </style>
 </head>
 <body>
