@@ -445,14 +445,22 @@ for (let zombie of zombies) {
 
   setTimeout(() => {
     setTimeout(() => {
+sunElement.addEventListener("click", (e) => {
+  sunCount += 25;
+  document.getElementById("sunCount").textContent = sunCount;
+
   const alert = document.getElementById("alertText");
   alert.style.display = 'block';
+
   setTimeout(() => {
     alert.style.display = 'none';
-  }, 3000);
-}, 1000);
-    // Xóa sun khỏi DOM
+    // Xóa sun khỏi DOM sau khi ẩn cảnh báo
     e.target.remove();
+  }, 1000);
+
+  // Nếu bạn muốn xóa sun NGAY khi click (không đợi 1s)
+  // e.target.remove(); // << Bỏ dòng này nếu dùng remove() trong setTimeout ở trên
+});
 
     const lawn = document.getElementById('gameCanvas'); // hoặc vùng div chứa lưới cỏ
 
