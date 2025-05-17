@@ -243,29 +243,30 @@
     </div>
   </div>
   <script>
-   const screenContainer = document.getElementById('screenContainer');
-const screenContent = document.getElementById('screenContent');
+   document.addEventListener("DOMContentLoaded", () => {
+  const screenContainer = document.getElementById('screenContainer');
+  const screenContent = document.getElementById('screenContent');
 
-document.querySelectorAll('.level-button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const level = btn.dataset.level;
-    startGame(level);
+  document.querySelectorAll('.level-button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const level = btn.dataset.level;
+      startGame(level);
+    });
   });
-});
 
-function startGame(level) {
-  screenContainer.classList.add('fade-out');
+  function startGame(level) {
+    screenContainer.classList.add('fade-out');
 
-  setTimeout(() => {
-    screenContainer.classList.remove('fade-out');
-    screenContainer.classList.remove('lobby');
-    screenContainer.classList.add('game');
-    screenContainer.classList.add('fade-in');
+    setTimeout(() => {
+      screenContainer.classList.remove('fade-out');
+      screenContainer.classList.remove('lobby');
+      screenContainer.classList.add('game');
+      screenContainer.classList.add('fade-in');
 
-    screenContent.innerHTML = `<canvas id="gameCanvas" width="900" height="500"></canvas>`;
-    initGame(level);
-  }, 600);
-}
+      screenContent.innerHTML = `<canvas id="gameCanvas" width="900" height="500"></canvas>`;
+      initGame(level);
+    }, 600);
+  }
 
 function initGame(level) {
   // Setup UI
