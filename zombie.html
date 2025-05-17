@@ -288,9 +288,10 @@ function initGame(level) {
         <button class="card" data-type="bomb" data-cost="150"></button>
         <button class="card" data-type="rock" data-cost="150"></button>
       </div>
+      <canvas id="gameCanvas" width="512" height="424"></canvas>
     </div>
     <div id="alertText">⚠️ Quái vật chuẩn bị xuất hiện!</div>
-  `;}
+  `;
 
   const canvas = document.getElementById('gameCanvas');
   const ctx = canvas.getContext('2d');
@@ -331,7 +332,6 @@ function initGame(level) {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Thu thập sun
     for (let sun of suns) {
       if (!sun.collected && x >= sun.x && x <= sun.x + 40 && y >= sun.y && y <= sun.y + 40) {
         sun.collected = true;
@@ -354,7 +354,6 @@ function initGame(level) {
     document.getElementById('sunCount').textContent = sunCount;
   });
 
-  // Vẽ lưới
   function drawGrid() {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     for (let i = 0; i <= rows; i++) {
@@ -371,7 +370,6 @@ function initGame(level) {
     }
   }
 
-  // Vẽ mọi đối tượng
   function drawEntities() {
     for (let plant of plants) {
       const x = plant.col * cellWidth + 10;
@@ -390,14 +388,12 @@ function initGame(level) {
     }
   }
 
-  // Cập nhật zombie
   function updateZombies() {
     for (let z of zombies) {
       z.x -= 1;
     }
   }
 
-  // Cập nhật mặt trời
   function updateSuns() {
     for (let sun of suns) {
       if (sun.from === "sky" && !sun.collected) {
@@ -417,7 +413,6 @@ function initGame(level) {
 
   setInterval(gameLoop, 50);
 
-  // Spawner
   function spawnZombies() {
     const row = Math.floor(Math.random() * rows);
     zombies.push({ row: row, x: canvas.width });
@@ -452,6 +447,7 @@ function initGame(level) {
   setInterval(spawnZombies, 5000);
   setInterval(dropSunFromSky, 5000);
   setInterval(generateSunFromSunflowers, 6000);
+}
   </script>
    <footer>Copy right by Hoangdeptrai</footer>
 </body>
