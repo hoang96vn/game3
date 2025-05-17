@@ -192,8 +192,8 @@
       background-repeat: no-repeat;
     }
 
-    .plant.sunflower  { background-image: url('img/plants/sunflower.gif'); }
-    .plant.peashooter { background-image: url('img/plants/peashooter.gif'); }
+    .plant.sunflower  { background-image: url('https://hoang96vn.github.io/game3/sunflower.gif'); }
+    .plant.peashooter { background-image: url('https://hoang96vn.github.io/game3/peashooter.png'); }
   </style>
 </head>
 <body>
@@ -374,9 +374,7 @@ const cards = document.querySelectorAll('.card');
     for (let plant of plants) {
       const x = plant.col * cellWidth;
       const y = plant.row * cellHeight;
-      const img = (plant.type === 'sunflower') ? sunflowerImg : peashooterImg;
-      ctx.drawImage(img, x + 5, y + 5, cellWidth - 10, cellHeight - 10);
-    }
+   const img = images[plant.type];
 
     // Vẽ zombie
     for (let zombie of zombies) {
@@ -451,8 +449,7 @@ const cards = document.querySelectorAll('.card');
     }, 3000);
   }, 1000);
 }
-    document.addEventListener('click', function (e) {
-  if (e.target.classList.contains('sun')) {
+
     // Tăng số sun hiện có
     let sunCountElem = document.getElementById('sunCount');
     let sunValue = parseInt(sunCountElem.innerText || '0', 10);
@@ -471,8 +468,6 @@ document.querySelectorAll('.plant-option').forEach(option => {
 });
     const lawn = document.getElementById('gameCanvas'); // hoặc vùng div chứa lưới cỏ
 
-lawn.addEventListener('click', function(e) {
-  if (!selectedPlant) return;
 
   // Kiểm tra đủ sun không
   const sunCountElem = document.getElementById('sunCount');
@@ -493,24 +488,18 @@ lawn.addEventListener('click', function(e) {
 
   // Reset chọn
 });
-    function updateCardAvailability() {
- document.querySelectorAll('.card').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (btn.classList.contains('disabled')) return;
-
-    const cost = parseInt(btn.dataset.cost);
-    if (sunCount >= cost) {
-      selectedPlant = btn.dataset.type;
+   function updateCardAvailability() {
+  document.querySelectorAll('.card').forEach(card => {
+    const cost = parseInt(card.dataset.cost);
+    if (sunCount < cost) {
+      card.classList.add('disabled');
+    } else {
+      card.classList.remove('disabled');
     }
   });
-});
-     setInterval(updateCardAvailability, 500); 
+}
+setInterval(updateCardAvailability, 500);
   
-  canvas.addEventListener('click', (event) => {
-    if (!selectedPlant) {
-      console.log("Bạn chưa chọn cây nào!");
-      return;
-    }
 
     // Lấy tọa độ click
     const rect = canvas.getBoundingClientRect();
