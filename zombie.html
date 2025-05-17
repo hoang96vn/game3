@@ -426,14 +426,17 @@ ctx.drawImage(img, x + 10, y + 10, cellWidth - 20, cellHeight - 20);
   }
 
   function generateSunFromSunflowers() {
-    for (let plant of plants) {
-      if (plant.type === 'sunflower') {
-        const x = plant.col * cellWidth + 20;
-        const y = plant.row * cellHeight + 20;
-        suns.push({ x, y, from: "sunflower", collected: false });
-      }
-    }
-  }
+ for (let plant of plants) {
+  const x = plant.col * cellWidth;
+  const y = plant.row * cellHeight;
+  const img = images[plant.type];
+  ctx.drawImage(img, x + 10, y + 10, cellWidth - 20, cellHeight - 20);
+}
+
+// Vẽ zombie tách riêng
+for (let zombie of zombies) {
+  ctx.drawImage(images.zombie, zombie.x, zombie.row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
+}
 
   setInterval(spawnZombies, 5000);
   setInterval(dropSunFromSky, 5000);
@@ -452,12 +455,6 @@ ctx.drawImage(img, x + 10, y + 10, cellWidth - 20, cellHeight - 20);
   }
 });
 
-
-document.querySelectorAll('.plant-option').forEach(option => {
-  option.addEventListener('click', () => {
-    selectedPlant = option.getAttribute('data-plant');
-  });
-});
     const lawn = document.getElementById('gameCanvas'); // hoặc vùng div chứa lưới cỏ
 
 
@@ -513,6 +510,31 @@ setInterval(updateCardAvailability, 500);
     console.log(`>> Đã trồng ${type} ở (${row}, ${col})`);
     // TODO: Vẽ hình ảnh cây lên canvas hoặc thêm vào mảng cây
   }
+  function updateZombies() {
+  for (let z of zombies) {
+    z.x -= 1;
+
+    for (let p of plants) {
+      if (z.row === p.row && z.x < p.col * cellWidth + cellWidth / 2) {
+        z.x += 1; // Zombie dừng lại khi gặp cây
+        break;
+      }
+    }
+  }
+}
+plants.push({ type: selectedPlant, row, col, lastSun: Date.now() });
+
+function generateSunFromSunflowers() {
+  const now = Date.now();
+  for (let plant of plants) {
+    if (plant.type === 'sunflower' && now - plant.lastSun >= 6000) {
+      const x = plant.col * cellWidth + 20;
+      const y = plant.row * cellHeight + 20;
+      suns.push({ x, y, from: "sunflower", collected: false });
+      plant.lastSun = now;
+    }
+  }
+}
   </script>
    <footer>Copy right by Hoangdeptrai</footer>
 </body>
