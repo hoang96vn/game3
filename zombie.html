@@ -295,10 +295,16 @@ function initGame(level) {
   let sunCount = 150;
   let selectedPlant = null;
 
-  const peashooterImg = new Image(); peashooterImg.src = 'https://hoang96vn.github.io/game3/peashooter.png';
-  const sunflowerImg = new Image();  sunflowerImg.src = 'https://hoang96vn.github.io/game3/sunflower.png';
-  const zombieImg = new Image();     zombieImg.src = 'https://hoang96vn.github.io/game3/zombie.gif';
-  const sunImg = new Image();        sunImg.src = 'https://hoang96vn.github.io/game3/sun.png';
+  const images = {
+  sunflower: new Image(),
+  peashooter: new Image(),
+  zombie: new Image(),
+  sun: new Image()
+};
+
+images.zombie.src = 'https://hoang96vn.github.io/game3/zombie.gif';
+  images.sunflower.src = 'https://hoang96vn.github.io/game3/sunflower.png';
+images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.png';
 
   document.querySelectorAll('.card').forEach(btn => {
     btn.addEventListener('click', () => {
