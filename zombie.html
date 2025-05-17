@@ -305,7 +305,7 @@ function initGame(level) {
 images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
   images.sunflower.src = 'https://hoang96vn.github.io/game3/sunflower.png';
 images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.png';
-
+images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
 const cards = document.querySelectorAll('.card');
 
   cards.forEach(card => {
@@ -350,7 +350,6 @@ const cards = document.querySelectorAll('.card');
     plants.push({ type: selectedPlant, row, col });
     sunCount -= cost;
     document.getElementById('sunCount').textContent = sunCount;
- 
   });
 
   function drawGrid() {
@@ -375,7 +374,7 @@ const cards = document.querySelectorAll('.card');
       const x = plant.col * cellWidth;
       const y = plant.row * cellHeight;
    const img = images[plant.type];
-
+ctx.drawImage(img, x + 10, y + 10, cellWidth - 20, cellHeight - 20);
     // Vẽ zombie
     for (let zombie of zombies) {
       ctx.drawImage(zombieImg, zombie.x, zombie.row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
@@ -384,7 +383,7 @@ const cards = document.querySelectorAll('.card');
     // Vẽ mặt trời
     for (let sun of suns) {
       if (!sun.collected) {
-        ctx.drawImage(sunImg, sun.x, sun.y, 40, 40);
+      ctx.drawImage(images.sun, sun.x, sun.y, 40, 40);
       }
     }
   }
@@ -441,20 +440,13 @@ const cards = document.querySelectorAll('.card');
   setInterval(generateSunFromSunflowers, 6000);
 
   setTimeout(() => {
-    const alert = document.getElementById("alertText");
-    alert.style.display = 'block';
     setTimeout(() => {
-      alert.style.display = 'none';
-      spawnZombies();
-    }, 3000);
-  }, 1000);
-}
-
-    // Tăng số sun hiện có
-    let sunCountElem = document.getElementById('sunCount');
-    let sunValue = parseInt(sunCountElem.innerText || '0', 10);
-    sunCountElem.innerText = sunValue + 25; // Mỗi sun = 25
-
+  const alert = document.getElementById("alertText");
+  alert.style.display = 'block';
+  setTimeout(() => {
+    alert.style.display = 'none';
+  }, 3000);
+}, 1000);
     // Xóa sun khỏi DOM
     e.target.remove();
   }
