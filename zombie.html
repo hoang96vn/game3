@@ -164,7 +164,10 @@
   font-size: 14px;
   color: white;
 }
-
+.card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 .card:hover {
   background: #ff9900;
 }
@@ -532,6 +535,17 @@ lawn.addEventListener('click', function(e) {
 
   // Reset chọn
   selectedPlant = null;
+});
+    function updateCardAvailability() {
+ document.querySelectorAll('.card').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.classList.contains('disabled')) return;
+
+    const cost = parseInt(btn.dataset.cost);
+    if (sunCount >= cost) {
+      selectedPlant = btn.dataset.type;
+    }
+  });
 });
   </script>
 </body>
