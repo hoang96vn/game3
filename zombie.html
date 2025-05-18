@@ -24,6 +24,7 @@
 
     #gameCanvas {
       background: url('https://hoang96vn.github.io/game3/backgroundgame.png') no-repeat;
+      margin-left:180px;
       background-size: cover;
       border: 2px solid #555;
       display: block;
@@ -120,12 +121,12 @@
     <button class="level-button" onclick="initGame(1)">Màn 1</button>
     <button class="level-button" onclick="initGame(2)">Màn 2</button>
   </div>
-</div>
+
       <!-- Giao diện game -->
       <div id="gameScreen">
         <canvas id="gameCanvas" width="512" height="424"></canvas>
       </div>
- 
+ </div>
   <script>
   function initGame(level) {
       const screenContent = document.getElementById('screenContent');
