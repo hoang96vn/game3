@@ -124,7 +124,6 @@
   </div>
 
   <script>
-        let hasShownAlert = false; // ✅ Biến để theo dõi trạng thái cảnh báo
   function initGame(level) {
       const screenContent = document.getElementById('screenContent');
       screenContent.innerHTML = `
@@ -135,7 +134,6 @@
             <div class="card" data-type="peashooter">🌱</div>
           </div>
           </div>
-           <div id="alertText">⚠️ Quái vật chuẩn bị xuất hiện!</div>
           <canvas id="gameCanvas" width="512" height="424"></canvas>
       `;
 
@@ -225,20 +223,6 @@
           zombie.x -= 0.5;
         }
       }
-document.getElementById('alertText').style.display = 'block';
-setTimeout(() => {
-  document.getElementById('alertText').style.display = 'none';
-}, 2000);
-
-  // ✅ Chỉ cảnh báo một lần
-  if (!hasShownAlert) {
-    document.getElementById('alertText').style.display = 'block';
-    hasShownAlert = true;
-    setTimeout(() => {
-      document.getElementById('alertText').style.display = 'none';
-    }, 2000);
-  }
-}
 
       function dropSunFromSky() {
         const x = Math.random() * (canvas.width - 40);
