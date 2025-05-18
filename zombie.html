@@ -14,9 +14,7 @@
     }
 
  #screenContent {
-   background: url('https://hoang96vn.github.io/game3/backgroundgame.png');
       margin-top: 30px;
-   display: 100%;
     }
 
     #gameUI {
@@ -129,13 +127,12 @@
   function initGame(level) {
       const screenContent = document.getElementById('screenContent');
       screenContent.innerHTML = `
-       
-          <canvas id="gameCanvas" width="100%" height="424">
-           <div id="gameUI">
+       <div id="gameUI">
           <div id="sunCounter">☀️ <span id="sunCount">150</span></div>
           <div id="plantCards">
             <div class="card" data-type="sunflower">🌻</div>
             <div class="card" data-type="peashooter">🌱</div>
+          <canvas id="gameCanvas" width="100%" height="424">
           </div>
           </div></canvas>
       `;
