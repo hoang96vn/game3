@@ -40,7 +40,7 @@
       width: 60px;
       height: 80px;
       margin: 0 5px;
-      background: #eee;
+      background: none;
       border: 2px solid #999;
       border-radius: 10px;
       cursor: pointer;
@@ -60,7 +60,7 @@
       top: -30px;
       right: 10px;
       font-size: 18px;
-      background: #fffbcc;
+      background: none;
       padding: 5px 10px;
       border-radius: 8px;
       border: 1px solid #aaa;
@@ -128,14 +128,15 @@
   function initGame(level) {
       const screenContent = document.getElementById('screenContent');
       screenContent.innerHTML = `
-        <div id="gameUI">
+       
+          <canvas id="gameCanvas" width="100vh" height="424">
+           <div id="gameUI">
           <div id="sunCounter">☀️ <span id="sunCount">150</span></div>
           <div id="plantCards">
             <div class="card" data-type="sunflower">🌻</div>
             <div class="card" data-type="peashooter">🌱</div>
           </div>
-          </div>
-          <canvas id="gameCanvas" width="100vh" height="424"></canvas>
+          </div></canvas>
       `;
 
       const canvas = document.getElementById('gameCanvas');
