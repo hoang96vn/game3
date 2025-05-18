@@ -123,6 +123,7 @@
   </div>
 
   <script>
+        let hasShownAlert = false; // ✅ Biến để theo dõi trạng thái cảnh báo
   function initGame(level) {
       const screenContent = document.getElementById('screenContent');
       screenContent.innerHTML = `
@@ -223,12 +224,10 @@
           zombie.x -= 0.5;
         }
       }
-
-    let hasShownAlert = false; // ✅ Biến để theo dõi trạng thái cảnh báo
-
-function spawnZombies() {
-  const row = Math.floor(Math.random() * rows);
-  zombies.push({ x: canvas.width, y: row * cellHeight });
+document.getElementById('alertText').style.display = 'block';
+setTimeout(() => {
+  document.getElementById('alertText').style.display = 'none';
+}, 2000);
 
   // ✅ Chỉ cảnh báo một lần
   if (!hasShownAlert) {
