@@ -177,14 +177,14 @@
       images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
 
       document.querySelectorAll('.card-sun').forEach(card => {
-        card.addEventListener('click', () => {
+        card-sun.addEventListener('click', () => {
           selectedPlant = card.dataset.type;
           document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
           card.classList.add('selected');
         });
       });
   document.querySelectorAll('.card-sunflower').forEach(card => {
-        card.addEventListener('click', () => {
+        card-sunflower.addEventListener('click', () => {
           selectedPlant = card.dataset.type;
           document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
           card.classList.add('selected');
