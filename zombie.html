@@ -35,13 +35,13 @@
       margin-bottom: 10px;
     }
 
-    .card {
-      width: 60px;
-      height: 80px;
+    .card-sun {
+      width: 40px;
+      height: 40px;
       margin: 0 5px;
-      background: none;
+      background: url('https://hoang96vn.github.io/game3/sun.png');
       border: 2px solid #999;
-      border-radius: 10px;
+      border-radius: 5px;
       cursor: pointer;
       display: flex;
       justify-content: center;
@@ -49,13 +49,29 @@
       font-size: 20px;
     }
 
-    .card.selected {
+    .card-sun.selected {
       border-color: gold;
-      background: #fffaa3;
+      background: none;
+    }
+ .card-sunflower {
+      width: 40px;
+      height: 40px;
+      margin: 0 5px;
+      background: url('https://hoang96vn.github.io/game3/sunflower.png');
+      border: 2px solid #999;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
     }
 
+    .card-sunflower.selected {
+      border-color: gold;
+      background: none;
+    }
     #sunCounter {
-      position: absolute;
       top: -30px;
       right: 10px;
       font-size: 18px;
@@ -128,10 +144,10 @@
       const screenContent = document.getElementById('screenContent');
       screenContent.innerHTML = `
        <div id="gameUI">
-          <div id="sunCounter">☀️ <span id="sunCount">150</span></div>
+          <div id="sunCounter"> <span id="sunCount">150</span></div>
           <div id="plantCards">
-            <div class="card" data-type="sunflower">🌻</div>
-            <div class="card" data-type="peashooter">🌱</div>
+            <div class="card" data-type="sunflower"></div>
+            <div class="card" data-type="peashooter"></div>
           </div>
           </div> 
           <canvas id="gameCanvas" width="800" height="424"></canvas>
