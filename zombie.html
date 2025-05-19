@@ -35,7 +35,7 @@
       margin-bottom: 10px;
     }
 
-    .card-sun {
+    .card {
       width: 40px;
       height: 40px;
       margin: 0 5px;
@@ -176,14 +176,20 @@
       images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
       images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
 
-      document.querySelectorAll('.card').forEach(card => {
+      document.querySelectorAll('.card-sun').forEach(card => {
         card.addEventListener('click', () => {
           selectedPlant = card.dataset.type;
           document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
           card.classList.add('selected');
         });
       });
-
+  document.querySelectorAll('.card-sunflower').forEach(card => {
+        card.addEventListener('click', () => {
+          selectedPlant = card.dataset.type;
+          document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+        });
+      });
       canvas.addEventListener('click', e => {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
