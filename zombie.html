@@ -143,15 +143,15 @@
       const screenContent = document.getElementById('screenContent');
       screenContent.innerHTML = `
        <div id="gameUI">
-          <div id="sunCounter"> <span id="sunCount">150</span></div>
+          <div id="sunCounter"> <span id="sunCount">150</span>
           <div id="plantCards">
             <div class="card-sun" data-type="sunflower"></div>
             <div class="card-sunflower" data-type="Sunflower"></div>
           </div>
           </div> 
-          <canvas id="gameCanvas" width="800" height="424"></canvas>
+         </div>
       `;}
-
+ <canvas id="gameCanvas" width="800" height="424"></canvas>
       const canvas = document.getElementById('gameCanvas');
       const ctx = canvas.getContext('2d');
       const rows = 5, cols = 9;
