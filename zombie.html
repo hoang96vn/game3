@@ -94,17 +94,7 @@ let suns = [];
 let bullets = [];
 let sunCount = 150;
 let loadedImages = 0;
-const totalImages = Object.keys(images).length;
 
-for (let key in images) {
-  images[key].onload = () => {
-    loadedImages++;
-    if (loadedImages === totalImages) {
-      // Khi tất cả ảnh đã load xong
-      console.log("All images loaded");
-    }
-  };
-}
 const images = {
   sunflower: new Image(),
   zombie: new Image(),
@@ -118,8 +108,17 @@ images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
 images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
 images.peashooter.src = 'https://hoang96vn.github.io/game3/Peashooter.gif';
 images.pea.src = 'https://hoang96vn.github.io/game3/Pea.gif';
-let loadedImages = 0;
+  let loadedImages = 0;
 const totalImages = Object.keys(images).length;
+
+for (let key in images) {
+  images[key].onload = () => {
+    loadedImages++;
+    if (loadedImages === totalImages) {
+      console.log("All images loaded");
+    }
+  };
+}
 function initGame() {
   document.getElementById('levelSelect').style.display = 'none';
   const container = document.getElementById('canvasgame');
@@ -217,7 +216,7 @@ function drawGrid() {
 
 function drawEntities() {
   for (const plant of plants) {
-    const img = plant.type === 'Peashooter' ? images.peashooter : images.sunflower;
+    const img = plant.type === 'peashooter' ? images.peashooter : images.sunflower;
     ctx.drawImage(img, plant.x + 10, plant.y + 10, 50, 50);
   }
   for (const zombie of zombies) {
