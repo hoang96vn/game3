@@ -129,6 +129,9 @@ function initGame() {
         <div class="card" id="sunflowerCard"
      style="background-image: url('https://hoang96vn.github.io/game3/SunFlower.gif');"
      data-type="sunflower" draggable="true"></div>
+     <div class="card" id="peashooter"
+     style="background-image: url('https://hoang96vn.github.io/game3/peashooter.png');"
+     data-type="sunflower" draggable="true"></div>
       </div>
     </div>
   `;
@@ -147,6 +150,9 @@ function initGame() {
 
 document.getElementById('sunflowerCard').addEventListener('dragstart', (e) => {
   e.dataTransfer.setData('text/plain', 'sunflower');
+});
+  document.getElementById('peashooter').addEventListener('dragstart', (e) => {
+  e.dataTransfer.setData('text/plain', 'peashooter');
 });
 canvas.addEventListener('click', (e) => {
   const rect = canvas.getBoundingClientRect();
