@@ -110,7 +110,7 @@ images.sunflower.src = 'https://hoang96vn.github.io/game3/SunFlower.gif';
 images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
 images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
 images.peashooter.src = 'https://hoang96vn.github.io/game3/Peashooter.gif';
-images.pea.src = 'https://hoang96vn.github.io/game3/Pea.gif';
+images.pea.src = 'https://hoang96vn.github.io/game3/pea.gif';
 
 let loadedImages = 0;
 const totalImages = Object.keys(images).length;
@@ -127,8 +127,6 @@ for (let key in images) {
 function initGame(level) {
   document.getElementById('levelSelect').style.display = 'none';
   const container = document.getElementById('canvasgame');
-    canvas = document.getElementById('gameCanvas');
-  ctx = canvas.getContext('2d');
   container.innerHTML = `
     <div id="gameContainer" style="position: relative;">
       <canvas id="gameCanvas" width="1000" height="500"></canvas>
@@ -143,7 +141,8 @@ function initGame(level) {
       </div>
     </div>
   `;
-
+   canvas = document.getElementById('gameCanvas');
+  ctx = canvas.getContext('2d');
   // 👉 Gán giá trị cho biến toàn cục
   cellWidth = canvas.width / cols;
   cellHeight = canvas.height / rows;
