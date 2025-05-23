@@ -83,7 +83,7 @@
 <script>
 let canvas, ctx;
 let rows = 5, cols = 9;
-let cellWidth = 800 / cols;
+let cellWidth = canvas.width / cols;
 let cellHeight = 424 / rows;
 let selectedPlant = null;
 let plants = [];
@@ -91,7 +91,18 @@ let zombies = [];
 let suns = [];
 let bullets = [];
 let sunCount = 150;
+let loadedImages = 0;
+const totalImages = Object.keys(images).length;
 
+for (let key in images) {
+  images[key].onload = () => {
+    loadedImages++;
+    if (loadedImages === totalImages) {
+      // Khi tất cả ảnh đã load xong
+      console.log("All images loaded");
+    }
+  };
+}
 const images = {
   sunflower: new Image(),
   zombie: new Image(),
