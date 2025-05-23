@@ -43,6 +43,10 @@
     .card.selected {
       border-color: gold;
     }
+    .screencontent {
+      border: none;
+      background: url('https://hoang96vn.github.io/game3/backgroundgame.png');
+    }
     #plantCards {
       position: absolute;
       top: 60px;
@@ -92,7 +96,7 @@
 
     <!-- Nội dung chính -->
   <div class="main-content">
- <div id="screenContent" width="800" height="424">
+ <div id="screenContent" width="1000" height="500">
     <button class="level-button" onclick="initGame(1)">Màn 1</button>
    <div id="canvasgame"></div>
   </div>
@@ -125,7 +129,7 @@ function initGame() {
   const container = document.getElementById('canvasgame');
   container.innerHTML = `
     <div id="gameContainer" style="position: relative;">
-      <canvas id="gameCanvas" width="800" height="424"></canvas>
+      <canvas id="gameCanvas" width="1000" height="500"></canvas>
       <div id="sunCounter">☀️ <span id="sunCount">150</span></div>
       <div id="plantCards">
         <div class="card" id="sunflowerCard"
