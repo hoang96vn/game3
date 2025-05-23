@@ -6,13 +6,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://hoang96vn.github.io/css/style.css" />
   <style>
-    /* Tối ưu hóa CSS: gom nhóm chung, loại bỏ trùng lặp */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     .level-button {
       padding: 10px 20px;
       margin: 10px;
@@ -22,10 +16,7 @@
       border: 2px solid #555;
       border-radius: 10px;
     }
-    #canvasgame {
-      margin-top: 20px;
-      position: relative;
-    }
+    #canvasgame { margin-top: 20px; position: relative; }
     #gameCanvas {
       border: 2px solid #555;
       background: url('https://hoang96vn.github.io/game3/backgroundgame.png') no-repeat;
@@ -40,13 +31,7 @@
       cursor: pointer;
       background-size: cover;
     }
-    .card.selected {
-      border-color: gold;
-    }
-    .screencontent {
-      border: none;
-      background: url('https://hoang96vn.github.io/game3/backgroundgame.png');
-    }
+    .card.selected { border-color: gold; }
     #plantCards {
       position: absolute;
       top: 60px;
@@ -70,39 +55,32 @@
 </head>
 <body>
   <div class="body">
-
-    <!-- Header -->
     <div class="header">
-     
       <div class="banner">
         Trang web riêng tư của Quốc Hoàng & Xuân Thy<br>
         <h2>Xuân Thy, em có yêu anh Hoàng đẹp trai không?</h2>
       </div>
     </div>
-
-    <!-- Sidebar -->
     <div class="sidebar">
-       <div class="logo">
-        <img src="https://hoang96vn.github.io/hoang/Logo.jpg" alt="Logo" ">
+      <div class="logo">
+        <img src="https://hoang96vn.github.io/hoang/Logo.jpg" alt="Logo">
       </div>
       <nav class="menu">
-      <a href="https://hoang96vn.github.io/hoang">Trang chủ</a>
-      <a href="https://hoang96vn.github.io/chat">Chat</a>
-      <a href="https://hoang96vn.github.io/hinhanh">Hình Ảnh</a>
-      <a href="https://hoang96vn.github.io/plan">Kế hoạch</a>
-      <a href="https://hoang96vn.github.io/lienhe">Liên hệ</a>
+        <a href="https://hoang96vn.github.io/hoang">Trang chủ</a>
+        <a href="https://hoang96vn.github.io/chat">Chat</a>
+        <a href="https://hoang96vn.github.io/hinhanh">Hình Ảnh</a>
+        <a href="https://hoang96vn.github.io/plan">Kế hoạch</a>
+        <a href="https://hoang96vn.github.io/lienhe">Liên hệ</a>
       </nav>
     </div>
+    <div class="main-content">
+      <div id="screenContent">
+        <button class="level-button" onclick="initGame(1)">Màn 1</button>
+        <div id="canvasgame"></div>
+      </div>
+    </div>
 
-    <!-- Nội dung chính -->
-  <div class="main-content">
- <div id="screenContent" width="1000" height="500">
-    <button class="level-button" onclick="initGame(1)">Màn 1</button>
-   <div id="canvasgame"></div>
-  </div>
-  </div>
-
-  <script>
+<script>
 let canvas, ctx;
 let rows = 5, cols = 9;
 let cellWidth = 800 / cols;
@@ -111,20 +89,23 @@ let selectedPlant = null;
 let plants = [];
 let zombies = [];
 let suns = [];
-let sunCount = 150;
 let bullets = [];
+let sunCount = 150;
+
 const images = {
   sunflower: new Image(),
   zombie: new Image(),
   sun: new Image(),
-  peashooter: new image(),
-     pea: new igmage()
+  peashooter: new Image(),
+  pea: new Image()
 };
+
 images.sunflower.src = 'https://hoang96vn.github.io/game3/SunFlower.gif';
 images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
 images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
 images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.gif';
 images.pea.src = 'https://hoang96vn.github.io/game3/pea.gif';
+
 function initGame() {
   const container = document.getElementById('canvasgame');
   container.innerHTML = `
@@ -133,11 +114,11 @@ function initGame() {
       <div id="sunCounter">☀️ <span id="sunCount">150</span></div>
       <div id="plantCards">
         <div class="card" id="sunflowerCard"
-     style="background-image: url('https://hoang96vn.github.io/game3/SunFlower.gif');"
-     data-type="sunflower" draggable="true"></div>
-    <div class="card" id="peashooterCard"
-     style="background-image: url('https://hoang96vn.github.io/game3/peashooter.gif');"
-     data-type="peashooter" draggable="true"></div>
+          style="background-image: url('https://hoang96vn.github.io/game3/SunFlower.gif');"
+          data-type="sunflower" draggable="true"></div>
+        <div class="card" id="peashooterCard"
+          style="background-image: url('https://hoang96vn.github.io/game3/peashooter.gif');"
+          data-type="peashooter" draggable="true"></div>
       </div>
     </div>
   `;
@@ -153,53 +134,53 @@ function initGame() {
     });
   });
 
+  document.getElementById('sunflowerCard').addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', 'sunflower');
+  });
+  document.getElementById('peashooterCard').addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', 'peashooter');
+  });
 
-document.getElementById('sunflowerCard').addEventListener('dragstart', (e) => {
-  e.dataTransfer.setData('text/plain', 'sunflower');
-});
-document.getElementById('peashooterCard').addEventListener('dragstart', (e) => {
-  e.dataTransfer.setData('text/plain', 'peashooter');
-});
-canvas.addEventListener('click', (e) => {
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-
-  for (let i = 0; i < suns.length; i++) {
-    const sun = suns[i];
-    if (x > sun.x && x < sun.x + 40 && y > sun.y && y < sun.y + 40) {
-      sunCount += 25;
-      document.getElementById('sunCount').textContent = sunCount;
-      suns.splice(i, 1);
-      return;
+  canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    for (let i = 0; i < suns.length; i++) {
+      const sun = suns[i];
+      if (x > sun.x && x < sun.x + 40 && y > sun.y && y < sun.y + 40) {
+        sunCount += 25;
+        document.getElementById('sunCount').textContent = sunCount;
+        suns.splice(i, 1);
+        return;
+      }
     }
-  }
-});
+  });
 
-canvas.addEventListener('dragover', (e) => e.preventDefault());
+  canvas.addEventListener('dragover', (e) => e.preventDefault());
 
-canvas.addEventListener('drop', (e) => {
-  e.preventDefault();
-  const plantType = e.dataTransfer.getData('text/plain');
-if ((plantType === 'sunflower' && sunCount >= 50) ||
-    (plantType === 'peashooter' && sunCount >= 100)) {
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  const col = Math.floor(x / cellWidth);
-  const row = Math.floor(y / cellHeight);
-  const alreadyPlanted = plants.some(p => p.row === row && p.col === col);
-  if (!alreadyPlanted) {
-    plants.push({ type: plantType, row, col, x: col * cellWidth, y: row * cellHeight });
-    sunCount -= plantType === 'sunflower' ? 50 : 100;
-    document.getElementById('sunCount').textContent = sunCount;
-  }
-}
-    
+  canvas.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const plantType = e.dataTransfer.getData('text/plain');
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const col = Math.floor(x / cellWidth);
+    const row = Math.floor(y / cellHeight);
+    const alreadyPlanted = plants.some(p => p.row === row && p.col === col);
+    if (!alreadyPlanted) {
+      const cost = plantType === 'sunflower' ? 50 : 100;
+      if (sunCount >= cost) {
+        plants.push({ type: plantType, row, col, x: col * cellWidth, y: row * cellHeight });
+        sunCount -= cost;
+        document.getElementById('sunCount').textContent = sunCount;
+      }
+    }
+  });
+
   setInterval(gameLoop, 50);
   setInterval(spawnZombies, 4000);
   setInterval(dropSunFromSky, 5000);
-  setInterval(generateSunFromSunflowers, 7000);
+  setInterval(generateSunFromPlants, 1000);
 }
 
 function drawGrid() {
@@ -217,6 +198,7 @@ function drawGrid() {
     ctx.stroke();
   }
 }
+
 function drawEntities() {
   for (const plant of plants) {
     const img = plant.type === 'peashooter' ? images.peashooter : images.sunflower;
@@ -235,10 +217,9 @@ function drawEntities() {
 
 function updateZombies() {
   for (const zombie of zombies) {
-    // kiểm tra va chạm với cây
     const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 50);
     if (!blockingPlant) {
-      zombie.x -= 0.2; // đi chậm hơn trước
+      zombie.x -= 0.2;
     }
   }
 }
@@ -249,37 +230,35 @@ function spawnZombies() {
 }
 
 function dropSunFromSky() {
-  const x = Math.random() * (canvas.width - 40);
+  const x = 100 + Math.random() * 600;
   suns.push({ x, y: 0, fallSpeed: 1 });
 }
 
-function generateSunFromSunflowers() {
+function generateSunFromPlants() {
   for (const plant of plants) {
     if (plant.type === 'sunflower' && Math.random() < 0.5) {
-      const offsetX = Math.random() * 30 - 15;
-      const offsetY = Math.random() * 30 - 15;
-      suns.push({
-        x: plant.x + 20 + offsetX,
-        y: plant.y + 20 + offsetY,
-        fallSpeed: 0,
-      });
+      suns.push({ x: plant.x + 20, y: plant.y + 20, fallSpeed: 0 });
     } else if (plant.type === 'peashooter') {
-      // Tạo đạn cho Peashooter
-      bullets.push({
-        x: plant.x + 40,
-        y: plant.y + 20,
-        row: plant.row
-      });
+      bullets.push({ x: plant.x + 50, y: plant.y + 20, row: plant.row });
     }
   }
 }
-    function dropSunFromSky() {
-  const x = 100 + Math.random() * 600; // rơi trong vùng có cây
-  suns.push({ x, y: 0, fallSpeed: 1 });
-}
+
 function updateSuns() {
-  for (const sun of suns) {
-    sun.y += sun.fallSpeed;
+  for (const sun of suns) sun.y += sun.fallSpeed;
+}
+
+function updateBullets() {
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    bullets[i].x += 4;
+    for (let j = zombies.length - 1; j >= 0; j--) {
+      const z = zombies[j];
+      if (z.row === bullets[i].row && z.x < bullets[i].x + 20 && z.x + 50 > bullets[i].x) {
+        zombies.splice(j, 1);
+        bullets.splice(i, 1);
+        break;
+      }
+    }
   }
 }
 
@@ -289,25 +268,11 @@ function gameLoop() {
   drawGrid();
   updateZombies();
   updateSuns();
-  drawEntities();
   updateBullets();
+  drawEntities();
 }
-    function updateBullets() {
-  for (let i = bullets.length - 1; i >= 0; i--) {
-    bullets[i].x += 4;
+</script>
 
-    for (let j = zombies.length - 1; j >= 0; j--) {
-      const z = zombies[j];
-      if (z.row === bullets[i].row && z.x < bullets[i].x + 20 && z.x + 50 > bullets[i].x) {
-        zombies.splice(j, 1);  // Xóa zombie
-        bullets.splice(i, 1);  // Xóa đạn
-        break;
-      }
-    }
-  }
-}
-  </script>
-   <footer>Copy right by Hoangdeptrai</footer>
+<footer>Copy right by Hoangdeptrai</footer>
 </body>
- 
 </html>
