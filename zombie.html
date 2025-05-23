@@ -253,7 +253,7 @@ function dropSunFromSky() {
 function generateSunFromPlants() {
   for (const plant of plants) {
     if (plant.type === 'sunflower' && Math.random() < 0.5) {
-      suns.push({ x: plant.x + 20, y: plant.y + 20, fallSpeed: 0 });
+      plants.push({ type: plantType, row, col, x: col * cellWidth, y: row * cellHeight });
     } else if (plant.type === 'peashooter') {
       bullets.push({ x: plant.x + 50, y: plant.y + 20, row: plant.row });
     }
