@@ -251,11 +251,12 @@ ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 100);
 
 function updateZombies() {
   for (let i = zombies.length - 1; i >= 0; i--) {
-    if (zombie.targetPlant && zombie.image !== images.zombieBite) {
-  zombiemove.image = images.zombieBite;
-} else if (!zombie.targetPlant && zombie.image !== images.zombiemove2) {
-  zombie.image = images.zombiemove2;
-}
+  const zombie = zombies[i]; // 🔧 THIẾU DÒNG NÀY
+  if (zombie.targetPlant && zombie.image !== images.zombiebite) {
+    zombie.image = images.zombiebite;
+  } else if (!zombie.targetPlant && zombie.image !== images.zombiemove2) {
+    zombie.image = images.zombiemove2;
+  }
     const zombie = zombies[i];
     if (zombie.targetPlant) {
       const now = Date.now();
