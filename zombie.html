@@ -107,8 +107,8 @@ const images = {
   zombiebite: new Image(),
   zombiemove2: new Image()
 };
-images.zombieBite.src = 'https://hoang96vn.github.io/game3/Zombiebite.gif';
-images.zombieWalk.src = 'https://hoang96vn.github.io/game3/Zombiemove2.gif';
+images.zombieBite.src = 'https://hoang96vn.github.io/game3/zombiebite.gif';
+images.zombieWalk.src = 'https://hoang96vn.github.io/game3/zombiemove2.gif';
 images.sunflower.src = 'https://hoang96vn.github.io/game3/SunFlower.gif';
 images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
 images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
@@ -129,8 +129,6 @@ for (let key in images) {
 
 function initGame(level) {
   document.getElementById('levelSelect').style.display = 'none';
-  ctx.drawImage(images.peashooter, plant.x + 10, plant.y + 10, 50, 50);
-ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 80);
   const container = document.getElementById('canvasgame');
   container.innerHTML = `
     <div id="gameContainer" style="position: relative;">
