@@ -103,9 +103,12 @@ const images = {
   zombie: new Image(),
   sun: new Image(),
   peashooter: new Image(), // 👈 chữ thường, cần sửa tên đúng ở mọi nơi dùng tới
-  pea: new Image()
+  pea: new Image(),
+  zombiebite: new Image(),
+  zombiemove2: new Image()
 };
-
+images.zombieBite.src = 'https://hoang96vn.github.io/game3/Zombiebite.gif';
+images.zombieWalk.src = 'https://hoang96vn.github.io/game3/Zombiemove2.gif';
 images.sunflower.src = 'https://hoang96vn.github.io/game3/SunFlower.gif';
 images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
 images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
@@ -243,28 +246,23 @@ function drawEntities() {
 
 function updateZombies() {
   for (const zombie of zombies) {
-    const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 50);
-   if (zombie.targetPlant) {
-  // Đang cắn cây
-  const now = Date.now();
-  if (now - zombie.attackStartTime >= 5000) {
-    // Sau 5 giây thì xóa cây
-    const index = plants.indexOf(zombie.targetPlant);
-    if (index !== -1) plants.splice(index, 1);
-    zombie.targetPlant = null;
-    zombie.attackStartTime = null;
-  }
-} else {
-  const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 40);
-  if (blockingPlant) {
-    // Bắt đầu cắn
-    zombie.targetPlant = blockingPlant;
-    zombie.attackStartTime = Date.now();
-  } else {
-    // Không bị chặn → tiếp tục đi
-    zombie.x -= 0.2;
-  }
-}
+    if (zombie.targetPlant) {
+      const now = Date.now();
+      if (now - zombie.attackStartTime >= 5000) {
+        const index = plants.indexOf(zombie.targetPlant);
+        if (index !== -1) plants.splice(index, 1);
+        zombie.targetPlant = null;
+        zombie.attackStartTime = null;
+      }
+    } else {
+      const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 40);
+      if (blockingPlant) {
+        zombie.targetPlant = blockingPlant;
+        zombie.attackStartTime = Date.now();
+      } else {
+        zombie.x -= 0.2;
+      }
+    }
   }
 }
 
@@ -315,13 +313,11 @@ function gameLoop() {
   updateBullets();
   drawEntities();
 }
-zombies.push({
-  x: canvas.width,
-  y: row * cellHeight + 10,
-  row,
-  targetPlant: null,
-  attackStartTime: null
-});
+  if (zombie.targetPlant && zombie.image !== images.zombieBite) {
+  zombie.image = images.zombieBite;
+} else if (!zombie.targetPlant && zombie.image !== images.zombieWalk) {
+  zombie.image = images.zombieWalk;
+}
 </script>
 
 <footer>Copy right by Hoangdeptrai</footer>
