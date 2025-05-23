@@ -125,7 +125,9 @@ function initGame() {
       <canvas id="gameCanvas" width="800" height="424"></canvas>
       <div id="sunCounter">☀️ <span id="sunCount">150</span></div>
       <div id="plantCards">
-        <div class="card" id="sunflowerCard" style="background-image: url('https://hoang96vn.github.io/game3/SunFlower.gif');" data-type="sunflower"></div>
+        <div class="card" id="sunflowerCard"
+     style="background-image: url('https://hoang96vn.github.io/game3/SunFlower.gif');"
+     data-type="sunflower" draggable="true"></div>
       </div>
     </div>
   `;
@@ -141,23 +143,30 @@ function initGame() {
     });
   });
 
-  canvas.addEventListener('click', (e) => {
+
+document.getElementById('sunflowerCard').addEventListener('dragstart', (e) => {
+  e.dataTransfer.setData('text/plain', 'sunflower');
+});
+
+canvas.addEventListener('dragover', (e) => e.preventDefault());
+
+canvas.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const plantType = e.dataTransfer.getData('text/plain');
+  if (plantType === 'sunflower' && sunCount >= 50) {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const col = Math.floor(x / cellWidth);
     const row = Math.floor(y / cellHeight);
-
-    for (let i = 0; i < suns.length; i++) {
-      const sun = suns[i];
-      if (x > sun.x && x < sun.x + 40 && y > sun.y && y < sun.y + 40) {
-        sunCount += 25;
-        document.getElementById('sunCount').textContent = sunCount;
-        suns.splice(i, 1);
-        return;
-      }
+    const alreadyPlanted = plants.some(p => p.row === row && p.col === col);
+    if (!alreadyPlanted) {
+      plants.push({ type: plantType, row, col, x: col * cellWidth, y: row * cellHeight });
+      sunCount -= 50;
+      document.getElementById('sunCount').textContent = sunCount;
     }
-
+  }
+});
     if (selectedPlant === 'sunflower' && sunCount >= 50) {
       const alreadyPlanted = plants.some(p => p.row === row && p.col === col);
       if (!alreadyPlanted) {
