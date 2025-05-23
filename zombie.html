@@ -229,13 +229,13 @@ function drawGrid() {
 function drawEntities() {
   for (const plant of plants) {
     const img = plant.type === 'peashooter' ? images.peashooter : images.sunflower;
-    ctx.drawImage(img, plant.x + 10, plant.y + 10, 50, 50);
+    ctx.drawImage(img, plant.x + 10, plant.y + 10, 50, 70);
   }
   for (const zombie of zombies) {
-    ctx.drawImage(images.zombie, zombie.x -= zombie.speed;, zombie.y, 60, 80);
+    ctx.drawImage(images.zombie, zombie.x -= zombie.speed;, zombie.y, 60, 100);
   }
   for (const sun of suns) {
-    ctx.drawImage(images.sun, sun.x, sun.y, 40, 40);
+    ctx.drawImage(images.sun, sun.x, sun.y, 70, 70);
   }
   for (const bullet of bullets) {
     ctx.drawImage(images.pea, bullet.x, bullet.y, 20, 20);
@@ -269,11 +269,13 @@ function updateZombies() {
 }
 function spawnZombies() {
   const row = Math.floor(Math.random() * rows);
+   const row = Math.floor(Math.random() * rows);
 if (z.row === bullets[i].row && z.x < bullets[i].x + 20 && z.x + 50 > bullets[i].x) {
   z.health--;
   bullets.splice(i, 1);
   if (z.health <= 0) zombies.splice(j, 1);
   break;
+  zombies.push({ x: canvas.width, y: row * cellHeight + 10, row, health: 3 });
 }
 }
 
@@ -302,8 +304,9 @@ function updateBullets() {
     for (let j = zombies.length - 1; j >= 0; j--) {
       const z = zombies[j];
       if (z.row === bullets[i].row && z.x < bullets[i].x + 20 && z.x + 50 > bullets[i].x) {
-        zombies.splice(j, 1);
+        z.health -= 1;
         bullets.splice(i, 1);
+        if (z.health <= 0) zombies.splice(j, 1);
         break;
       }
     }
@@ -318,6 +321,13 @@ function gameLoop() {
   updateSuns();
   updateBullets();
   drawEntities();
+  plants.push({
+  type: plantType,
+  row, col,
+  x: col * cellWidth,
+  y: row * cellHeight,
+  health: 5
+});
 }
   if (zombie.targetPlant && zombie.image !== images.zombiebite) {
   zombie.image = images.zombiebite;
