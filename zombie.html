@@ -108,17 +108,19 @@ let plants = [];
 let zombies = [];
 let suns = [];
 let sunCount = 150;
-
+let bullets = [];
 const images = {
   sunflower: new Image(),
   zombie: new Image(),
   sun: new Image(),
-  peashooter
+  peashooter: new image(),
+     images.pea = new Image()
 };
 images.sunflower.src = 'https://hoang96vn.github.io/game3/SunFlower.gif';
 images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
 images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
-images.sun.src = 'https://hoang96vn.github.io/game3/peashooter.gif';
+images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.gif';
+images.pea.src = 'https://hoang96vn.github.io/game3/pea.png';
 function initGame() {
   const container = document.getElementById('canvasgame');
   container.innerHTML = `
@@ -129,9 +131,9 @@ function initGame() {
         <div class="card" id="sunflowerCard"
      style="background-image: url('https://hoang96vn.github.io/game3/SunFlower.gif');"
      data-type="sunflower" draggable="true"></div>
-     <div class="card" id="peashooter"
+    <div class="card" id="peashooterCard"
      style="background-image: url('https://hoang96vn.github.io/game3/peashooter.gif');"
-     data-type="sunflower" draggable="true"></div>
+     data-type="peashooter" draggable="true"></div>
       </div>
     </div>
   `;
@@ -214,7 +216,8 @@ function drawGrid() {
 
 function drawEntities() {
   for (const plant of plants) {
-    ctx.drawImage(images.sunflower, plant.x + 10, plant.y + 10, 50, 50);
+    const img = plant.type === 'peashooter' ? images.peashooter : images.sunflower;
+    ctx.drawImage(img, plant.x + 10, plant.y + 10, 50, 50);
   }
   for (const zombie of zombies) {
     ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 80);
@@ -223,10 +226,16 @@ function drawEntities() {
     ctx.drawImage(images.sun, sun.x, sun.y, 40, 40);
   }
 }
-
+    for (const bullet of bullets) {
+    ctx.drawImage(images.pea, bullet.x, bullet.y, 20, 20);
+  }
 function updateZombies() {
   for (const zombie of zombies) {
-    zombie.x -= 0.5;
+    // kiểm tra va chạm với cây
+    const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 50);
+    if (!blockingPlant) {
+      zombie.x -= 0.2; // đi chậm hơn trước
+    }
   }
 }
 
@@ -242,19 +251,6 @@ function dropSunFromSky() {
 
 function generateSunFromSunflowers() {
   for (const plant of plants) {
-    if (plant.type === 'sunflower') {
-      const offsetX = Math.random() * 30 - 15; // lệch trái/phải nhẹ
-      const offsetY = Math.random() * 30 - 15; // lệch lên/xuống nhẹ
-      suns.push({
-        x: plant.x + 20 + offsetX,
-        y: plant.y + 20 + offsetY,
-        fallSpeed: 0,
-      });
-    }
-  }
-}
-    function generateSunFromSunflowers() {
-  for (const plant of plants) {
     if (plant.type === 'sunflower' && Math.random() < 0.5) {
       const offsetX = Math.random() * 30 - 15;
       const offsetY = Math.random() * 30 - 15;
@@ -262,6 +258,13 @@ function generateSunFromSunflowers() {
         x: plant.x + 20 + offsetX,
         y: plant.y + 20 + offsetY,
         fallSpeed: 0,
+      });
+    } else if (plant.type === 'peashooter') {
+      // Tạo đạn cho Peashooter
+      bullets.push({
+        x: plant.x + 40,
+        y: plant.y + 20,
+        row: plant.row
       });
     }
   }
@@ -283,6 +286,21 @@ function gameLoop() {
   updateZombies();
   updateSuns();
   drawEntities();
+  updateBullets();
+}
+    function updateBullets() {
+  for (let i = bullets.length - 1; i >= 0; i--) {
+    bullets[i].x += 4;
+
+    for (let j = zombies.length - 1; j >= 0; j--) {
+      const z = zombies[j];
+      if (z.row === bullets[i].row && z.x < bullets[i].x + 20 && z.x + 50 > bullets[i].x) {
+        zombies.splice(j, 1);  // Xóa zombie
+        bullets.splice(i, 1);  // Xóa đạn
+        break;
+      }
+    }
+  }
 }
   </script>
    <footer>Copy right by Hoangdeptrai</footer>
