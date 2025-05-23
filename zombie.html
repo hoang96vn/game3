@@ -13,83 +13,7 @@
       padding: 0;
     }
 
- #screenContent {
-      margin-top: 30px;
-    }
-
-    #gameUI {
-      position: relative;
-      display: inline-block;
-    }
-
-    #gameCanvas {
-      background: url('https://hoang96vn.github.io/game3/backgroundgame.png') no-repeat;
-      background-size: cover;
-      border: 2px solid #555;
-      display: block;
-    }
-
-    #plantCards {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
-
-    .cardsun {
-      width: 40px;
-      height: 40px;
-      margin: 0 5px;
-      background: url('https://hoang96vn.github.io/game3/sun.png');
-      border: 2px solid #999;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 20px;
-    }
-
-    .cardsun.selected {
-      border-color: gold;
-      background: none;
-    }
- .cardsunflower {
-      width: 40px;
-      height: 40px;
-      margin: 0 5px;
-      background: url('https://hoang96vn.github.io/game3/SunFlower.gif');
-      border: 2px solid #999;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 20px;
-    }
-
-    .cardsunflower.selected {
-      border-color: gold;
-    }
-    #sunCounter {
-      display: flex;
-      right: 10px;
-      font-size: 18px;
-      background: none;
-      padding: 5px 10px;
-      border-radius: 8px;
-      border: 1px solid #aaa;
-    }
-
-    #alertText {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 18px;
-      color: red;
-      display: none;
-    }
-
     .level-button {
-      position: center;
       padding: 10px 20px;
       margin: 10px;
       font-size: 18px;
@@ -98,9 +22,45 @@
       border: 2px solid #555;
       border-radius: 10px;
     }
-
-    .level-button:hover {
-      background-color: #ddd;
+    #canvasgame {
+      margin-top: 20px;
+      position: relative;
+    }
+    #gameCanvas {
+      border: 2px solid #555;
+      background: url('https://hoang96vn.github.io/game3/backgroundgame.png') no-repeat;
+      background-size: cover;
+    }
+    .card {
+      width: 50px;
+      height: 50px;
+      border: 2px solid #999;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      background-size: cover;
+    }
+    .card.selected {
+      border-color: gold;
+    }
+    #plantCards {
+      position: absolute;
+      top: 60px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      pointer-events: auto;
+    }
+    #sunCounter {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px 10px;
+      background-color: #fff;
+      border-radius: 8px;
+      border: 1px solid #aaa;
+      font-size: 18px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -139,192 +99,146 @@
   </div>
 
   <script>
- function initGame(level) {
-const screenContent = document.getElementById('canvasgame');
+let canvas, ctx;
+let rows = 5, cols = 9;
+let cellWidth = 800 / cols;
+let cellHeight = 424 / rows;
+let selectedPlant = null;
+let plants = [];
+let zombies = [];
+let suns = [];
+let sunCount = 150;
 
-  screenContent.innerHTML = `
-    <div id="gameContainer">
+const images = {
+  sunflower: new Image(),
+  zombie: new Image(),
+  sun: new Image()
+};
+images.sunflower.src = 'https://hoang96vn.github.io/game3/SunFlower.gif';
+images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
+images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
+
+function initGame() {
+  const container = document.getElementById('canvasgame');
+  container.innerHTML = `
+    <div id="gameContainer" style="position: relative;">
       <canvas id="gameCanvas" width="800" height="424"></canvas>
-      
-      <!-- UI overlay -->
-      <div id="gameUI" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
-        <!-- Sun Counter -->
-        <div id="sunCounter" style="position: absolute; top: 10px; left: 10px;padding: 4px 8px; border-radius: 6px; font-weight: bold;">
-          ☀️ <span id="sunCount">150</span>
-        </div>
-
-        <!-- Plant Cards -->
-        <div id="plantCards" style="position: absolute; top: 60px; left: 10px; display: flex; flex-direction: column; gap: 10px; pointer-events: auto;">
-          <div class="card-sunflower" data-type="Sunflower" title="Sunflower"></div>
-          <!-- Thêm các loại cây khác ở đây -->
-        </div>
+      <div id="sunCounter">☀️ <span id="sunCount">150</span></div>
+      <div id="plantCards">
+        <div class="card" id="sunflowerCard" style="background-image: url('https://hoang96vn.github.io/game3/SunFlower.gif');" data-type="sunflower"></div>
       </div>
     </div>
   `;
 
-  // Bắt đầu canvas game
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-  const rows = 5, cols = 9;
-  const cellHeight = canvas.height / rows;
-  const cellWidth = canvas.width / cols;
+  canvas = document.getElementById('gameCanvas');
+  ctx = canvas.getContext('2d');
 
-  // Gắn sự kiện chọn cây
-  let selectedPlant = null;
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('click', () => {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
       selectedPlant = card.dataset.type;
-      document.querySelectorAll('.card').forEach(c => c.style.outline = 'none');
-      card.style.outline = '2px solid orange';
     });
   });
 
-  // Gắn sự kiện click canvas để trồng cây
   canvas.addEventListener('click', (e) => {
-    if (!selectedPlant) return;
-
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
     const col = Math.floor(x / cellWidth);
     const row = Math.floor(y / cellHeight);
 
-    // Ví dụ: vẽ thử cây
-    if (selectedPlant === 'Sunflower') {
-      ctx.fillStyle = 'orange';
-      ctx.beginPath();
-      ctx.arc(col * cellWidth + cellWidth / 2, row * cellHeight + cellHeight / 2, 20, 0, 2 * Math.PI);
-      ctx.fill();
+    for (let i = 0; i < suns.length; i++) {
+      const sun = suns[i];
+      if (x > sun.x && x < sun.x + 40 && y > sun.y && y < sun.y + 40) {
+        sunCount += 25;
+        document.getElementById('sunCount').textContent = sunCount;
+        suns.splice(i, 1);
+        return;
+      }
     }
 
-    // Xoá chọn
-    selectedPlant = null;
-    document.querySelectorAll('.card').forEach(c => c.style.outline = 'none');
+    if (selectedPlant === 'sunflower' && sunCount >= 50) {
+      const alreadyPlanted = plants.some(p => p.row === row && p.col === col);
+      if (!alreadyPlanted) {
+        plants.push({ type: selectedPlant, row, col, x: col * cellWidth, y: row * cellHeight });
+        sunCount -= 50;
+        document.getElementById('sunCount').textContent = sunCount;
+      }
+    }
   });
+
+  setInterval(gameLoop, 50);
+  setInterval(spawnZombies, 4000);
+  setInterval(dropSunFromSky, 5000);
+  setInterval(generateSunFromSunflowers, 7000);
 }
 
+function drawGrid() {
+  ctx.strokeStyle = '#ccc';
+  for (let i = 0; i <= rows; i++) {
+    ctx.beginPath();
+    ctx.moveTo(0, i * cellHeight);
+    ctx.lineTo(canvas.width, i * cellHeight);
+    ctx.stroke();
+  }
+  for (let i = 0; i <= cols; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i * cellWidth, 0);
+    ctx.lineTo(i * cellWidth, canvas.height);
+    ctx.stroke();
+  }
+}
 
-      let plants = [];
-      let zombies = [];
-      let suns = [];
-      let sunCount = 150;
-      let selectedPlant = null;
+function drawEntities() {
+  for (const plant of plants) {
+    ctx.drawImage(images.sunflower, plant.x + 10, plant.y + 10, 50, 50);
+  }
+  for (const zombie of zombies) {
+    ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 80);
+  }
+  for (const sun of suns) {
+    ctx.drawImage(images.sun, sun.x, sun.y, 40, 40);
+  }
+}
 
-      const images = {
-        sunflower: new Image(),
-        peashooter: new Image(),
-        zombie: new Image(),
-        sun: new Image()
-      };
+function updateZombies() {
+  for (const zombie of zombies) {
+    zombie.x -= 0.5;
+  }
+}
 
-      images.sunflower.src = 'https://hoang96vn.github.io/game3/SunFlower.gif';
-      images.peashooter.src = 'https://hoang96vn.github.io/game3/peashooter.gif';
-      images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
-      images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
-
-      document.querySelectorAll('.card-sun').forEach(card => {
-        card-sun.addEventListener('click', () => {
-          selectedPlant = card.dataset.type;
-          document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
-          card.classList.add('selected');
-        });
-      });
-  document.querySelectorAll('.card-sunflower').forEach(card => {
-        card.addEventListener('click', () => {
-          selectedPlant = card.dataset.type;
-          document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
-          card.classList.add('selected');
-        });
-      });
-      canvas.addEventListener('click', e => {
-        const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const col = Math.floor(x / cellWidth);
-        const row = Math.floor(y / cellHeight);
-
-        // Thu thập mặt trời
-        for (let i = 0; i < suns.length; i++) {
-          const sun = suns[i];
-          if (x > sun.x && x < sun.x + 40 && y > sun.y && y < sun.y + 40) {
-            sunCount += 25;
-            document.getElementById('sunCount').textContent = sunCount;
-            suns.splice(i, 1);
-            return;
-          }
-        }
-
-        // Trồng cây
-        if (selectedPlant) {
-          const alreadyPlanted = plants.some(p => p.row === row && p.col === col);
-          if (!alreadyPlanted) {
-            if ((selectedPlant === 'sunflower' && sunCount >= 50) || (selectedPlant === 'peashooter' && sunCount >= 100)) {
-              plants.push({ type: selectedPlant, row, col, x: col * cellWidth, y: row * cellHeight, lastShotTime: 0 });
-              sunCount -= selectedPlant === 'sunflower' ? 50 : 100;
-              document.getElementById('sunCount').textContent = sunCount;
-            }
-          }
-        }
-      });
-
-      function drawGrid() {
-        ctx.strokeStyle = '#ccc';
-        for (let i = 0; i <= rows; i++) ctx.strokeRect(0, i * cellHeight, canvas.width, 1);
-        for (let i = 0; i <= cols; i++) ctx.strokeRect(i * cellWidth, 0, 1, canvas.height);
-      }
-
-      function drawEntities() {
-        for (const plant of plants) {
-          ctx.drawImage(images[plant.type], plant.x, plant.y, cellWidth, cellHeight);
-        }
-        for (const zombie of zombies) {
-          ctx.drawImage(images.zombie, zombie.x, zombie.y, cellWidth, cellHeight);
-        }
-        for (const sun of suns) {
-          ctx.drawImage(images.sun, sun.x, sun.y, 40, 40);
-        }
-      }
-
-      function updateZombies() {
-        for (const zombie of zombies) {
-          zombie.x -= 0.5;
-        }
-      }
-
-      function dropSunFromSky() {
-        const x = Math.random() * (canvas.width - 40);
-        suns.push({ x, y: 0, fallSpeed: 1 });
-      }
-
-      function generateSunFromSunflowers() {
-        for (const plant of plants) {
-          if (plant.type === 'sunflower') {
-            suns.push({ x: plant.x + 10, y: plant.y + 10, fallSpeed: 0 });
-          }
-        }
-      }
-
-      function updateSuns() {
-        for (const sun of suns) sun.y += sun.fallSpeed;
-      }
-
-      function gameLoop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawGrid();
-        updateZombies();
-        updateSuns();
-        drawEntities();
-      }
-
-      setInterval(gameLoop, 50);
-      setInterval(spawnZombies, 5000);
-      setInterval(dropSunFromSky, 5000);
-      setInterval(generateSunFromSunflowers, 6000);
-    }
-    function spawnZombies() {
+function spawnZombies() {
   const row = Math.floor(Math.random() * rows);
-  zombies.push({ x: canvas.width, y: row * cellHeight, row });
+  zombies.push({ x: canvas.width, y: row * cellHeight + 10, row });
+}
+
+function dropSunFromSky() {
+  const x = Math.random() * (canvas.width - 40);
+  suns.push({ x, y: 0, fallSpeed: 1 });
+}
+
+function generateSunFromSunflowers() {
+  for (const plant of plants) {
+    if (plant.type === 'sunflower') {
+      suns.push({ x: plant.x + 20, y: plant.y + 20, fallSpeed: 0 });
+    }
+  }
+}
+
+function updateSuns() {
+  for (const sun of suns) {
+    sun.y += sun.fallSpeed;
+  }
+}
+
+function gameLoop() {
+  if (!ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawGrid();
+  updateZombies();
+  updateSuns();
+  drawEntities();
 }
   </script>
    <footer>Copy right by Hoangdeptrai</footer>
