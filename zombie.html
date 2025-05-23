@@ -141,12 +141,13 @@ function initGame(level) {
       </div>
     </div>
   `;
-   canvas = document.getElementById('gameCanvas');
+
+  canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
-  // 👉 Gán giá trị cho biến toàn cục
   cellWidth = canvas.width / cols;
   cellHeight = canvas.height / rows;
 
+  // 👉 Bắt sự kiện chọn cây
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('click', () => {
       document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
@@ -154,7 +155,8 @@ function initGame(level) {
       selectedPlant = card.dataset.type;
     });
   });
-}
+
+  // 👉 Bắt sự kiện kéo cây
   document.getElementById('sunflowerCard').addEventListener('dragstart', (e) => {
     e.dataTransfer.setData('text/plain', 'sunflower');
   });
@@ -162,6 +164,7 @@ function initGame(level) {
     e.dataTransfer.setData('text/plain', 'peashooter');
   });
 
+  // 👉 Bắt sự kiện click lấy sun
   canvas.addEventListener('click', (e) => {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -177,8 +180,8 @@ function initGame(level) {
     }
   });
 
+  // 👉 Bắt sự kiện kéo thả cây lên sân cỏ
   canvas.addEventListener('dragover', (e) => e.preventDefault());
-
   canvas.addEventListener('drop', (e) => {
     e.preventDefault();
     const plantType = e.dataTransfer.getData('text/plain');
@@ -198,11 +201,12 @@ function initGame(level) {
     }
   });
 
+  // 👉 Khởi động game loop sau khi canvas đã tạo
   setInterval(gameLoop, 50);
   setInterval(spawnZombies, 4000);
   setInterval(dropSunFromSky, 5000);
   setInterval(generateSunFromPlants, 1000);
-
+}
 function drawGrid() {
   ctx.strokeStyle = '#ccc';
   for (let i = 0; i <= rows; i++) {
