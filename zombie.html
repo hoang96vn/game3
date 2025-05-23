@@ -126,6 +126,8 @@ for (let key in images) {
 
 function initGame(level) {
   document.getElementById('levelSelect').style.display = 'none';
+  ctx.drawImage(images.peashooter, plant.x + 10, plant.y + 10, 50, 50);
+ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 80);
   const container = document.getElementById('canvasgame');
   container.innerHTML = `
     <div id="gameContainer" style="position: relative;">
@@ -141,8 +143,7 @@ function initGame(level) {
       </div>
     </div>
   `;
-ctx.drawImage(images.peashooter, plant.x + 10, plant.y + 10, 50, 50);
-ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 80);
+
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
   cellWidth = canvas.width / cols;
