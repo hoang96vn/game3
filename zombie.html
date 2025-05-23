@@ -138,8 +138,10 @@ function initGame(level) {
 
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
+    let cellWidth, cellHeight;
 let cellWidth = canvas.width / cols;
 let cellHeight = canvas.height / rows;
+
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('click', () => {
       document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
