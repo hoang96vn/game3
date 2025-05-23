@@ -232,7 +232,7 @@ function drawEntities() {
     ctx.drawImage(img, plant.x + 10, plant.y + 10, 50, 50);
   }
   for (const zombie of zombies) {
-    ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 80);
+    ctx.drawImage(images.zombie, zombie.x -= zombie.speed;, zombie.y, 60, 80);
   }
   for (const sun of suns) {
     ctx.drawImage(images.sun, sun.x, sun.y, 40, 40);
@@ -255,21 +255,26 @@ function updateZombies() {
         zombie.attackStartTime = null;
       }
     } else {
-      if (zombie.image !== images.zombieWalk) zombie.image = images.zombieWalk;
+      if (zombie.image !== images.zombiemove2) zombie.image = images.zombiemove2;
 
-      const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 40);
+      const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x -= zombie.speed;) < 40);
       if (blockingPlant) {
         zombie.targetPlant = blockingPlant;
         zombie.attackStartTime = Date.now();
       } else {
-        zombie.x -= 0.2;
+       zombie.x -= zombie.speed;
       }
     }
   }
 }
 function spawnZombies() {
   const row = Math.floor(Math.random() * rows);
-  zombies.push({ x: canvas.width, y: row * cellHeight + 10, row });
+if (z.row === bullets[i].row && z.x < bullets[i].x + 20 && z.x + 50 > bullets[i].x) {
+  z.health--;
+  bullets.splice(i, 1);
+  if (z.health <= 0) zombies.splice(j, 1);
+  break;
+}
 }
 
 function dropSunFromSky() {
