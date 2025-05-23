@@ -197,7 +197,13 @@ function initGame(level) {
     if (!alreadyPlanted) {
       const cost = plantType === 'sunflower' ? 50 : 100;
       if (sunCount >= cost) {
-        plants.push({ type: plantType, row, col, x: col * cellWidth, y: row * cellHeight });
+ plants.push({
+  type: plantType,
+  row, col,
+  x: col * cellWidth,
+  y: row * cellHeight,
+  health: 5
+});
         sunCount -= cost;
         document.getElementById('sunCount').textContent = sunCount;
       }
@@ -243,26 +249,34 @@ function drawEntities() {
 }
 
 function updateZombies() {
-  for (const zombie of zombies) {
+  for (let i = zombies.length - 1; i >= 0; i--) {
+    if (zombie.targetPlant && zombie.image !== images.zombieBite) {
+  zombiemove.image = images.zombieBite;
+} else if (!zombie.targetPlant && zombie.image !== images.zombiemove2) {
+  zombie.image = images.zombiemove2;
+}
+    const zombie = zombies[i];
     if (zombie.targetPlant) {
-      if (zombie.image !== images.zombieBite) zombie.image = images.zombieBite;
-
       const now = Date.now();
-      if (now - zombie.attackStartTime >= 5000) {
-        const index = plants.indexOf(zombie.targetPlant);
-        if (index !== -1) plants.splice(index, 1);
-        zombie.targetPlant = null;
-        zombie.attackStartTime = null;
+      if (!zombie.attackStartTime) zombie.attackStartTime = now;
+
+      if (now - zombie.attackStartTime >= 1000) { // mỗi 1 giây cắn 1 lần
+        zombie.attackStartTime = now;
+        zombie.targetPlant.health -= 1;
+
+        if (zombie.targetPlant.health <= 0) {
+          const index = plants.indexOf(zombie.targetPlant);
+          if (index !== -1) plants.splice(index, 1);
+          zombie.targetPlant = null;
+        }
       }
     } else {
-      if (zombie.image !== images.zombiemove2) zombie.image = images.zombiemove2;
-
-      const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x -= zombie.speed;) < 40);
+      const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 40);
       if (blockingPlant) {
         zombie.targetPlant = blockingPlant;
         zombie.attackStartTime = Date.now();
       } else {
-       zombie.x -= zombie.speed;
+        zombie.x -= 0.2;
       }
     }
   }
@@ -321,19 +335,8 @@ function gameLoop() {
   updateSuns();
   updateBullets();
   drawEntities();
-  plants.push({
-  type: plantType,
-  row, col,
-  x: col * cellWidth,
-  y: row * cellHeight,
-  health: 5
-});
 }
-  if (zombie.targetPlant && zombie.image !== images.zombiebite) {
-  zombie.image = images.zombiebite;
-} else if (!zombie.targetPlant && zombie.image !== images.zombiemove2) {
-  zombie.image = images.zombiemove2;
-}
+ 
 </script>
 
 <footer>Copy right by Hoangdeptrai</footer>
