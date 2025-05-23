@@ -236,11 +236,33 @@ function dropSunFromSky() {
 function generateSunFromSunflowers() {
   for (const plant of plants) {
     if (plant.type === 'sunflower') {
-      suns.push({ x: plant.x + 20, y: plant.y + 20, fallSpeed: 0 });
+      const offsetX = Math.random() * 30 - 15; // lệch trái/phải nhẹ
+      const offsetY = Math.random() * 30 - 15; // lệch lên/xuống nhẹ
+      suns.push({
+        x: plant.x + 20 + offsetX,
+        y: plant.y + 20 + offsetY,
+        fallSpeed: 0,
+      });
     }
   }
 }
-
+    function generateSunFromSunflowers() {
+  for (const plant of plants) {
+    if (plant.type === 'sunflower' && Math.random() < 0.5) {
+      const offsetX = Math.random() * 30 - 15;
+      const offsetY = Math.random() * 30 - 15;
+      suns.push({
+        x: plant.x + 20 + offsetX,
+        y: plant.y + 20 + offsetY,
+        fallSpeed: 0,
+      });
+    }
+  }
+}
+    function dropSunFromSky() {
+  const x = 100 + Math.random() * 600; // rơi trong vùng có cây
+  suns.push({ x, y: 0, fallSpeed: 1 });
+}
 function updateSuns() {
   for (const sun of suns) {
     sun.y += sun.fallSpeed;
