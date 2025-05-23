@@ -147,6 +147,21 @@ function initGame() {
 document.getElementById('sunflowerCard').addEventListener('dragstart', (e) => {
   e.dataTransfer.setData('text/plain', 'sunflower');
 });
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  for (let i = 0; i < suns.length; i++) {
+    const sun = suns[i];
+    if (x > sun.x && x < sun.x + 40 && y > sun.y && y < sun.y + 40) {
+      sunCount += 25;
+      document.getElementById('sunCount').textContent = sunCount;
+      suns.splice(i, 1);
+      return;
+    }
+  }
+});
 
 canvas.addEventListener('dragover', (e) => e.preventDefault());
 
