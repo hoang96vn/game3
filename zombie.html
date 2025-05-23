@@ -75,8 +75,11 @@
     </div>
     <div class="main-content">
       <div id="screenContent">
-        <button class="level-button" onclick="initGame(1)">Màn 1</button>
-        <div id="canvasgame"></div>
+        <div id="levelSelect">
+  <button class="level-button" onclick="initGame(1)">Màn 1</button>
+  <button class="level-button" onclick="initGame(2)">Màn 2</button>
+</div>
+<div id="canvasgame"></div>
       </div>
     </div>
 
@@ -118,6 +121,7 @@ images.pea.src = 'https://hoang96vn.github.io/game3/Pea.gif';
 let loadedImages = 0;
 const totalImages = Object.keys(images).length;
 function initGame() {
+  document.getElementById('levelSelect').style.display = 'none';
   const container = document.getElementById('canvasgame');
   container.innerHTML = `
     <div id="gameContainer" style="position: relative;">
