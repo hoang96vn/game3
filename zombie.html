@@ -83,8 +83,7 @@
 <script>
 let canvas, ctx;
 let rows = 5, cols = 9;
-let cellWidth = canvas.width / cols;
-let cellHeight = canvas.height / rows;
+
 let selectedPlant = null;
 let plants = [];
 let zombies = [];
@@ -116,7 +115,8 @@ images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
 images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
 images.peashooter.src = 'https://hoang96vn.github.io/game3/Peashooter.gif';
 images.pea.src = 'https://hoang96vn.github.io/game3/Pea.gif';
-
+let loadedImages = 0;
+const totalImages = Object.keys(images).length;
 function initGame() {
   const container = document.getElementById('canvasgame');
   container.innerHTML = `
@@ -136,7 +136,8 @@ function initGame() {
 
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
-
+let cellWidth = canvas.width / cols;
+let cellHeight = canvas.height / rows;
   document.querySelectorAll('.card').forEach(card => {
     card.addEventListener('click', () => {
       document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
@@ -212,7 +213,7 @@ function drawGrid() {
 
 function drawEntities() {
   for (const plant of plants) {
-    const img = plant.type === 'peashooter' ? images.peashooter : images.sunflower;
+    const img = plant.type === 'Peashooter' ? images.peashooter : images.sunflower;
     ctx.drawImage(img, plant.x + 10, plant.y + 10, 50, 50);
   }
   for (const zombie of zombies) {
