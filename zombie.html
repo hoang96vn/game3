@@ -311,10 +311,10 @@ function gameLoop() {
   updateBullets();
   drawEntities();
 }
-  if (zombie.targetPlant && zombie.image !== images.zombieBite) {
-  zombie.image = images.zombieBite;
-} else if (!zombie.targetPlant && zombie.image !== images.zombieWalk) {
-  zombie.image = images.zombieWalk;
+  if (zombie.targetPlant && zombie.image !== images.zombiebite) {
+  zombie.image = images.zombiebite;
+} else if (!zombie.targetPlant && zombie.image !== images.zombiemove2) {
+  zombie.image = images.zombiemove2;
 }
 </script>
 
