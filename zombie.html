@@ -118,7 +118,7 @@ const images = {
   zombie: new Image(),
   sun: new Image(),
   peashooter: new image(),
-     images.pea = new Image()
+     pea: new igmage()
 };
 images.sunflower.src = 'https://hoang96vn.github.io/game3/SunFlower.gif';
 images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
@@ -157,7 +157,7 @@ function initGame() {
 document.getElementById('sunflowerCard').addEventListener('dragstart', (e) => {
   e.dataTransfer.setData('text/plain', 'sunflower');
 });
-  document.getElementById('peashooter').addEventListener('dragstart', (e) => {
+document.getElementById('peashooterCard').addEventListener('dragstart', (e) => {
   e.dataTransfer.setData('text/plain', 'peashooter');
 });
 canvas.addEventListener('click', (e) => {
@@ -181,20 +181,20 @@ canvas.addEventListener('dragover', (e) => e.preventDefault());
 canvas.addEventListener('drop', (e) => {
   e.preventDefault();
   const plantType = e.dataTransfer.getData('text/plain');
-  if (plantType === 'sunflower' && sunCount >= 50) {
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const col = Math.floor(x / cellWidth);
-    const row = Math.floor(y / cellHeight);
-    const alreadyPlanted = plants.some(p => p.row === row && p.col === col);
-    if (!alreadyPlanted) {
-      plants.push({ type: plantType, row, col, x: col * cellWidth, y: row * cellHeight });
-      sunCount -= 50;
-      document.getElementById('sunCount').textContent = sunCount;
-    }
+if ((plantType === 'sunflower' && sunCount >= 50) ||
+    (plantType === 'peashooter' && sunCount >= 100)) {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const col = Math.floor(x / cellWidth);
+  const row = Math.floor(y / cellHeight);
+  const alreadyPlanted = plants.some(p => p.row === row && p.col === col);
+  if (!alreadyPlanted) {
+    plants.push({ type: plantType, row, col, x: col * cellWidth, y: row * cellHeight });
+    sunCount -= plantType === 'sunflower' ? 50 : 100;
+    document.getElementById('sunCount').textContent = sunCount;
   }
-});
+}
     
   setInterval(gameLoop, 50);
   setInterval(spawnZombies, 4000);
@@ -217,7 +217,6 @@ function drawGrid() {
     ctx.stroke();
   }
 }
-
 function drawEntities() {
   for (const plant of plants) {
     const img = plant.type === 'peashooter' ? images.peashooter : images.sunflower;
@@ -229,10 +228,11 @@ function drawEntities() {
   for (const sun of suns) {
     ctx.drawImage(images.sun, sun.x, sun.y, 40, 40);
   }
-}
-    for (const bullet of bullets) {
+  for (const bullet of bullets) {
     ctx.drawImage(images.pea, bullet.x, bullet.y, 20, 20);
   }
+}
+
 function updateZombies() {
   for (const zombie of zombies) {
     // kiểm tra va chạm với cây
