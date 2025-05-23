@@ -93,7 +93,6 @@ let zombies = [];
 let suns = [];
 let bullets = [];
 let sunCount = 150;
-let loadedImages = 0;
 
 const images = {
   sunflower: new Image(),
@@ -119,7 +118,8 @@ for (let key in images) {
     }
   };
 }
-function initGame() {
+function initGame(level) {
+  onsole.log("Đang bắt đầu level:", level);
   document.getElementById('levelSelect').style.display = 'none';
   const container = document.getElementById('canvasgame');
   container.innerHTML = `
