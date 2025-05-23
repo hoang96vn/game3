@@ -107,8 +107,8 @@ const images = {
   zombiebite: new Image(),
   zombiemove2: new Image()
 };
-images.zombieBite.src = 'https://hoang96vn.github.io/game3/zombiebite.gif';
-images.zombieWalk.src = 'https://hoang96vn.github.io/game3/zombiemove2.gif';
+images.zombiebite.src = 'https://hoang96vn.github.io/game3/zombiebite.gif';
+images.zombiemove2.src = 'https://hoang96vn.github.io/game3/zombiemove2.gif';
 images.sunflower.src = 'https://hoang96vn.github.io/game3/SunFlower.gif';
 images.zombie.src = 'https://hoang96vn.github.io/game3/Zombiemove.gif';
 images.sun.src = 'https://hoang96vn.github.io/game3/sun.png';
@@ -245,6 +245,8 @@ function drawEntities() {
 function updateZombies() {
   for (const zombie of zombies) {
     if (zombie.targetPlant) {
+      if (zombie.image !== images.zombieBite) zombie.image = images.zombieBite;
+
       const now = Date.now();
       if (now - zombie.attackStartTime >= 5000) {
         const index = plants.indexOf(zombie.targetPlant);
@@ -253,6 +255,8 @@ function updateZombies() {
         zombie.attackStartTime = null;
       }
     } else {
+      if (zombie.image !== images.zombieWalk) zombie.image = images.zombieWalk;
+
       const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 40);
       if (blockingPlant) {
         zombie.targetPlant = blockingPlant;
@@ -263,7 +267,6 @@ function updateZombies() {
     }
   }
 }
-
 function spawnZombies() {
   const row = Math.floor(Math.random() * rows);
   zombies.push({ x: canvas.width, y: row * cellHeight + 10, row });
