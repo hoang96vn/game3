@@ -141,7 +141,8 @@ function initGame(level) {
       </div>
     </div>
   `;
-
+ctx.drawImage(images.peashooter, plant.x + 10, plant.y + 10, 50, 50);
+ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 80);
   canvas = document.getElementById('gameCanvas');
   ctx = canvas.getContext('2d');
   cellWidth = canvas.width / cols;
@@ -242,9 +243,27 @@ function drawEntities() {
 function updateZombies() {
   for (const zombie of zombies) {
     const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 50);
-    if (!blockingPlant) {
-      zombie.x -= 0.2;
-    }
+   if (zombie.targetPlant) {
+  // Đang cắn cây
+  const now = Date.now();
+  if (now - zombie.attackStartTime >= 5000) {
+    // Sau 5 giây thì xóa cây
+    const index = plants.indexOf(zombie.targetPlant);
+    if (index !== -1) plants.splice(index, 1);
+    zombie.targetPlant = null;
+    zombie.attackStartTime = null;
+  }
+} else {
+  const blockingPlant = plants.find(p => p.row === zombie.row && Math.abs(p.x - zombie.x) < 40);
+  if (blockingPlant) {
+    // Bắt đầu cắn
+    zombie.targetPlant = blockingPlant;
+    zombie.attackStartTime = Date.now();
+  } else {
+    // Không bị chặn → tiếp tục đi
+    zombie.x -= 0.2;
+  }
+}
   }
 }
 
@@ -295,7 +314,13 @@ function gameLoop() {
   updateBullets();
   drawEntities();
 }
-
+zombies.push({
+  x: canvas.width,
+  y: row * cellHeight + 10,
+  row,
+  targetPlant: null,
+  attackStartTime: null
+});
 </script>
 
 <footer>Copy right by Hoangdeptrai</footer>
