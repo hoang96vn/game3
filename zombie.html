@@ -182,16 +182,7 @@ canvas.addEventListener('drop', (e) => {
     }
   }
 });
-    if (selectedPlant === 'sunflower' && sunCount >= 50) {
-      const alreadyPlanted = plants.some(p => p.row === row && p.col === col);
-      if (!alreadyPlanted) {
-        plants.push({ type: selectedPlant, row, col, x: col * cellWidth, y: row * cellHeight });
-        sunCount -= 50;
-        document.getElementById('sunCount').textContent = sunCount;
-      }
-    }
-  });
-
+    
   setInterval(gameLoop, 50);
   setInterval(spawnZombies, 4000);
   setInterval(dropSunFromSky, 5000);
