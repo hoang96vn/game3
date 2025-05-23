@@ -238,7 +238,8 @@ function drawEntities() {
     ctx.drawImage(img, plant.x + 10, plant.y + 10, 50, 70);
   }
   for (const zombie of zombies) {
-    ctx.drawImage(images.zombie, zombie.x -= zombie.speed;, zombie.y, 60, 100);
+   zombie.x -= zombie.speed;
+ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 100);
   }
   for (const sun of suns) {
     ctx.drawImage(images.sun, sun.x, sun.y, 70, 70);
@@ -283,14 +284,16 @@ function updateZombies() {
 }
 function spawnZombies() {
   const row = Math.floor(Math.random() * rows);
-   const row = Math.floor(Math.random() * rows);
-if (z.row === bullets[i].row && z.x < bullets[i].x + 20 && z.x + 50 > bullets[i].x) {
-  z.health--;
-  bullets.splice(i, 1);
-  if (z.health <= 0) zombies.splice(j, 1);
-  break;
-  zombies.push({ x: canvas.width, y: row * cellHeight + 10, row, health: 3 });
-}
+  zombies.push({
+    x: canvas.width,
+    y: row * cellHeight + 10,
+    row,
+    health: 5,
+    speed: 0.2,
+    targetPlant: null,
+    attackStartTime: null,
+    image: images.zombiemove2
+  });
 }
 
 function dropSunFromSky() {
