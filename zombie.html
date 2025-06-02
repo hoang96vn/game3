@@ -239,7 +239,7 @@ function drawEntities() {
   }
   for (const zombie of zombies) {
    zombie.x -= zombie.speed;
-ctx.drawImage(images.zombie, zombie.x, zombie.y, 60, 100);
+ctx.drawImage(zombie.image, zombie.x, zombie.y, 60, 100);
   }
   for (const sun of suns) {
     ctx.drawImage(images.sun, sun.x, sun.y, 70, 70);
@@ -257,7 +257,6 @@ function updateZombies() {
   } else if (!zombie.targetPlant && zombie.image !== images.zombiemove2) {
     zombie.image = images.zombiemove2;
   }
-    const zombie = zombies[i];
     if (zombie.targetPlant) {
       const now = Date.now();
       if (!zombie.attackStartTime) zombie.attackStartTime = now;
@@ -296,6 +295,10 @@ function spawnZombies() {
     image: images.zombiemove2
   });
 }
+  if (zombie.x < 0) {
+  alert("Bạn đã thua! Zombie đã vào nhà.");
+  window.location.reload(); // hoặc cho về lại màn chọn
+}
 
 function dropSunFromSky() {
   const x = 100 + Math.random() * 600;
@@ -307,7 +310,7 @@ function generateSunFromPlants() {
     if (plant.type === 'sunflower' && Math.random() < 0.5) {
       suns.push({ x: plant.x + 20, y: plant.y + 20, fallSpeed: 0 });
     } else if (plant.type === 'peashooter') {
-      bullets.push({ x: plant.x + 50, y: plant.y + 20, row: plant.row });
+      bullets.push({ x: plant.x + 50, y: plant.y + 35, row: plant.row });
     }
   }
 }
